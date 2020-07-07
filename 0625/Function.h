@@ -10,7 +10,7 @@ void DeleteSafe(T& rObj) {
 }
 
 template<typename T>
-void DeleteListSafe(list<T>& _list) {
+void DeleteSafe(list<T>& _list) {
 	for (auto& pObj : _list) { DeleteSafe(pObj); }
 	_list.clear();
 }

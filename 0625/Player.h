@@ -2,7 +2,7 @@
 #include "CObj.h"
 
 class CGunBarrel;
-
+struct IPlayerState;
 class CPlayer final : public CObj
 {
 public:
@@ -18,7 +18,6 @@ public:
 	virtual void Release(void)				override;
 
 private:
-	list<CObj*> m_listShield;
-	CGunBarrel* m_pGunBarrel;
+	IPlayerState* m_pPlayerState;
 };
 

@@ -45,6 +45,7 @@ public:
 	size_t GetWidth(void) const { return m_iWidth; }
 	size_t GetHeight(void) const { return m_iHeight; }
 	float GetSpeed(void) const { return m_fSpeed; }
+	void SetSpeed(float fSpeed) { m_fSpeed = fSpeed; }
 	void SetValid(bool _bIsValid) { m_bIsValid = _bIsValid; }
 	bool IsValid(void) const { return m_bIsValid; }
 	/*void SetActive(bool _bIsActive) { m_bIsActive = _bIsActive; }

@@ -159,6 +159,7 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="GuidedBullet.h" />
     <ClInclude Include="GunBarrel.h" />
+    <ClInclude Include="item.h" />
     <ClInclude Include="MainApp.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="ScrewBall.h" />
     <ClInclude Include="ScrewBullet.h" />
     <ClInclude Include="Shield.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="targetver.h" />
@@ -180,12 +182,14 @@
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="GuidedBullet.cpp" />
     <ClCompile Include="GunBarrel.cpp" />
+    <ClCompile Include="item.cpp" />
     <ClCompile Include="MainApp.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScrewBall.cpp" />
     <ClCompile Include="ScrewBullet.cpp" />
     <ClCompile Include="Shield.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="UI_Gauge.cpp" />
     <ClCompile Include="그림출력.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

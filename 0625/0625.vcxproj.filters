@@ -54,6 +54,9 @@
     <Filter Include="소스 파일\03.Obj\025.ScrewBall">
       <UniqueIdentifier>{6c99e75e-6583-4c85-971b-fcaf24885e23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03.Obj\026.item">
+      <UniqueIdentifier>{97c1f8c9-f04e-40b1-a958-aea0478b98a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLayer.h">
@@ -131,6 +134,12 @@
     <ClInclude Include="GuidedBullet.h">
       <Filter>소스 파일\03.Obj\021.Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>소스 파일\03.Obj\020.Player</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>소스 파일\03.Obj\026.item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CLayer.cpp">
@@ -192,6 +201,12 @@
     </ClCompile>
     <ClCompile Include="GuidedBullet.cpp">
       <Filter>소스 파일\03.Obj\021.Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

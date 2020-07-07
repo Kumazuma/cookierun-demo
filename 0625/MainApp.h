@@ -21,7 +21,7 @@ public:
 	const CObj* GetViewSpace(void) const { return m_pViewSpace; }
 	list<CObj*>& GetMonsters(void) { return m_listMonsters; }
 	list<CObj*>& GetBullets(void) { return m_listBullets; }
-
+	list<CObj*>& GetItems(void) { return m_items; }
 private:
 	inline void ClearWindow(void);
 
@@ -31,5 +31,6 @@ private:
 	CObj* m_pViewSpace;
 	list<CObj*> m_listMonsters;
 	list<CObj*> m_listBullets;
+	list<CObj*> m_items;
 };
 
