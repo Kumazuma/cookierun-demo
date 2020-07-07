@@ -1,6 +1,5 @@
 #pragma once
 #include "CObj.h"
-
 class CGunBarrel;
 struct IPlayerState;
 class CPlayer final : public CObj
@@ -19,5 +18,6 @@ public:
 
 private:
 	IPlayerState* m_pPlayerState;
+
 };
 

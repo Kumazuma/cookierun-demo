@@ -37,7 +37,6 @@ namespace State
 		virtual IPlayerState* Update(CObj* const, float timedelta)override;
 	private:
 		bool m_bReachedTop;
-		float m_fDelay;
 		float m_fPrevSpeed;
 	};
 	class DoubleJump : public Jump

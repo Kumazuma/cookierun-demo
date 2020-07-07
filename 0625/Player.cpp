@@ -11,6 +11,7 @@
 CPlayer::CPlayer(CGameWorld& _rGameWorld)
 	:
 	CObj(_rGameWorld, 0, 0, ciPlayerSize, ciPlayerSize, cfPlayerSpeed, Rectangle)
+	
 {
 }
 
@@ -39,10 +40,12 @@ void CPlayer::Ready(void)
 
 int CPlayer::Update(void)
 {
+	
 	if (m_pPlayerState != nullptr)
 	{
+		
 		//TODO: 나중에 실제 델타 값을 넣을 수 있어야 함.
-		IPlayerState* nextState = m_pPlayerState->Update(this, 0.016f);
+		IPlayerState* nextState = m_pPlayerState->Update(this, GetGameWorld().GetTimer()->GetElapsedTimePerFrame());
 		if (nextState != m_pPlayerState)
 		{
 			assert(nextState != nullptr);

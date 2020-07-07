@@ -59,6 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 		if (dwOldTime + 10 < GetTickCount())
 		{
+			tMain.RunTick();
 			tMain.Update();
 			tMain.LateUpdate();
 			tMain.Render();

@@ -147,6 +147,8 @@
   <ItemGroup>
     <ClInclude Include="0625.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CBlock.h" />
+    <ClInclude Include="CMap.h" />
     <ClInclude Include="CSpace.h" />
     <ClInclude Include="CGameWorld.h" />
     <ClInclude Include="CLayer.h" />
@@ -157,11 +159,17 @@
     <ClInclude Include="Enum.h" />
     <ClInclude Include="Extern.h" />
     <ClInclude Include="Function.h" />
-    <ClInclude Include="GuidedBullet.h" />
+    <ClInclude Include="GuidedBullet.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="GunBarrel.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="MainApp.h" />
-    <ClInclude Include="Monster.h" />
+    <ClInclude Include="Monster.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScrewBall.h" />
@@ -175,16 +183,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CBlock.cpp" />
+    <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CSpace.cpp" />
     <ClCompile Include="CGameWorld.cpp" />
     <ClCompile Include="CLayer.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="Function.cpp" />
-    <ClCompile Include="GuidedBullet.cpp" />
+    <ClCompile Include="GuidedBullet.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GunBarrel.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="MainApp.cpp" />
-    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Monster.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScrewBall.cpp" />
     <ClCompile Include="ScrewBullet.cpp" />
