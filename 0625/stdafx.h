@@ -19,6 +19,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <deque>
 #include <iostream>
 #include <algorithm>
 #include <cstring>
@@ -29,6 +30,8 @@ using namespace std;
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 #include "Enum.h"
 #include "Const.h"
+#include "Struct.h"
 #include "Extern.h"
 #include "Define.h"
 #include "Function.h"
+#include "CTimer.h"

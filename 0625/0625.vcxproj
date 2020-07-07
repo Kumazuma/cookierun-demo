@@ -147,6 +147,8 @@
   <ItemGroup>
     <ClInclude Include="0625.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CBlock.h" />
+    <ClInclude Include="CMap.h" />
     <ClInclude Include="CSpace.h" />
     <ClInclude Include="CGameWorld.h" />
     <ClInclude Include="CLayer.h" />
@@ -173,6 +175,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CBlock.cpp" />
+    <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CSpace.cpp" />
     <ClCompile Include="CGameWorld.cpp" />
     <ClCompile Include="CLayer.cpp" />

@@ -2,6 +2,7 @@
 #include "CGameWorld.h"
 
 class CObj;
+class CMap;
 
 class CMainApp final : public CGameWorld 
 {
@@ -31,5 +32,6 @@ private:
 	CObj* m_pViewSpace;
 	list<CObj*> m_listMonsters;
 	list<CObj*> m_listBullets;
+	CMap* m_pMap;
 };
 

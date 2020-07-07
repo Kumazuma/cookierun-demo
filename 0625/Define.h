@@ -1,7 +1,7 @@
 #pragma once
 
-#define WINCX 800
-#define WINCY 600
+#define WINCX 1500
+#define WINCY 800
 
 // 키 입력 관련
 //#define NOT_PRESS_(_Key)			((GetAsyncKeyState(_Key) ^ 0xFFFF0000) == 0)
