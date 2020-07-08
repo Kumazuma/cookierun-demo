@@ -7,8 +7,8 @@
 #include "CBlock.h"
 #include "Player.h"
 #include "UI_Gauge.h"
-constexpr float JUMP_SPPED = 600.f;
-constexpr float GRAVITY_ACCELATION = -800.f;
+constexpr float JUMP_SPPED = 900.f;
+constexpr float GRAVITY_ACCELATION = -2300.f;
 void State::Move::Default::OnLoaded(CObj* const pObject)
 {
    
@@ -112,10 +112,10 @@ IPlayeMoveState* State::Move::SingleJump::Update(CObj* const pObject, float fTim
     {
         return new Default{};
     }
-    if (m_bReachedTop == false && m_fSpeed <= 0.f)
+    /*if (m_bReachedTop == false && m_fSpeed <= 0.f)
     {
         m_bReachedTop = true;
-    }
+    }*/
     if (m_bReachedTop == false && m_fSpeed < JUMP_SPPED / 2.f && IS_PRESS_KEY_(VK_SPACE))
     {
         //TODO: double Jump

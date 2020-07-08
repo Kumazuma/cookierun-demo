@@ -105,7 +105,7 @@ void CMainApp::Start(void)
 		DeleteSafe(m_pPlayer);
 		// 플레이어 생성
 		if (!m_pPlayer) {
-			m_pPlayer = new CPlayer(*this, 120, WINCY >> 1);
+			m_pPlayer = new CPlayer(*this, 125, 535);
 			m_pPlayer->Ready();
 		}
 		m_pViewSpace = new CSpace(*this, WINCX >> 1, WINCY >> 1, WINCX, WINCY, nullptr);

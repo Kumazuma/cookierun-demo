@@ -35,5 +35,6 @@ private:
 	HP m_hp;
 	CUI_Gauge* m_pHpGauge;
 	int m_nScore;
+	TCHAR szScore[64];
 };
 

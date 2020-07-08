@@ -129,6 +129,8 @@ void CPlayer::Render(const HDC & _hdc)
 	{
 		m_pCollisionState->Render(this, _hdc);
 	}
+	swprintf_s(szScore, 64, TEXT("Score : %d"), m_nScore);
+	TextOut(_hdc, 30, 120, szScore, lstrlen(szScore));
 }
 
 void CPlayer::Release(void)
