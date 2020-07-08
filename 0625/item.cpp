@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "item.h"
 #include "CGameWorld.h"
-constexpr float ItemMaxSize = 100.f;
+constexpr float ItemMaxSize = 40.f;
 
 CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
 	CObj{world, fX, fY},
@@ -9,8 +9,8 @@ CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
 	m_itemType{type},
 	m_sign{-1}
 {
-	SetWidth(100.f);
-	SetHeight(100.f);
+	SetWidth(ItemMaxSize);
+	SetHeight(ItemMaxSize);
 }
 template<>
 CObj* CItem::CreateItem<Item::CCoin>(CGameWorld& world, float fX, float fY)
@@ -30,13 +30,22 @@ int CItem::Update(void)
 	float fTimeDelta = GetGameWorld().GetTimer()->GetElapsedTimePerFrame();
 	m_realScale += m_sign  * m_fSpeed * fTimeDelta; //1초당 3%씩 스케일이 변한다.
 	//작아지는 중인데, 스케일이 0보다 떨어지면,
-	if (m_sign == -1 && m_realScale < 0.2f)
+	
+	if (m_sign == -1 && m_realScale < -1.f)
 	{
 		m_sign = 1;
 	}
 	else if (m_sign == 1 && m_realScale > 1.f)
 	{
 		m_sign = -1;
+	}
+	if (m_realScale > 1.f)
+	{
+		m_realScale = 1.f;
+	}
+	else if (m_realScale < -1.f)
+	{
+		m_realScale = -1.f;
 	}
 	return 0;
 }
