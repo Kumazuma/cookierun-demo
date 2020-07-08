@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "item.h"
 #include "CGameWorld.h"
+#include "Player.h"
 #include "MainApp.h"
 #include "CMap.h"
+#include <assert.h>
 constexpr float ItemMaxSize = 40.f;
 
 CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
@@ -75,6 +77,31 @@ float CItem::GetConvRight(void) const
 {
 	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvRight(GetX());
 }
+void CItem::LateUpdate(void)
+{
+	auto& app = (CMainApp&) GetGameWorld();
+	auto pMap = app.GetMap();
+
+	CObj* pPlayer = app.GetPlayer();
+	float distanceXBetweenCenters =
+		fabsf(pMap->GetConvX(GetX()) - pPlayer->GetX());
+	float distanceYBetweenCenters =
+		fabsf(GetY() - pPlayer->GetX());
+	float sumRadiusX = (GetWidth() + pPlayer->GetWidth()) / 2.f;
+	float sumRadiusY = (GetHeight() + pPlayer->GetHeight()) / 2.f;
+	bool intersact =
+		sumRadiusX >= distanceXBetweenCenters &&
+		sumRadiusY >= distanceYBetweenCenters;
+	//두 반지름의 합보다 실제 거리가 작으면 겹쳐진 것이다.
+	if (intersact)
+	{
+		auto p = dynamic_cast<CPlayer*>(pPlayer);
+		assert(p != nullptr);
+		//합쳐지면 지워여야 하고, 플레이어에게 효과를 부여한다.
+		Effect(p);
+		SetValid(false);
+	}
+}
 Item::CCoin::CCoin(CGameWorld& world, float fX, float fY) :
 	CItem{ world, fX, fY , CItem::Type::COIN }
 {
@@ -83,17 +110,20 @@ Item::CCoin::CCoin(CGameWorld& world, float fX, float fY) :
 void Item::CCoin::Render(const HDC& hDC)
 {
 	if (IsBlockInView()) {
+		auto& app = (CMainApp&)GetGameWorld();
+		auto pMap = app.GetMap();
 		HBRUSH hYellowBrush = CreateSolidBrush(RGB(255, 255, 128));
 		HBRUSH hPrevBrush = (HBRUSH)SelectObject(hDC, hYellowBrush);
 		Ellipse(hDC,
-			static_cast<int>( - m_realScale * ItemMaxSize / 2.f),
+			static_cast<int>(pMap->GetConvX(m_fX) - m_realScale * ItemMaxSize / 2.f),
 			static_cast<int>(m_fY - ItemMaxSize / 2.f),
-			static_cast<int>(m_fX + m_realScale * ItemMaxSize / 2.f),
+			static_cast<int>(pMap->GetConvX(m_fX) + m_realScale * ItemMaxSize / 2.f),
 			static_cast<int>(m_fY + ItemMaxSize / 2.f)
 		);
-
 		SelectObject(hDC, hPrevBrush);
 		DeleteObject(hYellowBrush);
+
+		
 	}
 }
 
@@ -101,6 +131,11 @@ void Item::CCoin::Render(const HDC& hDC)
 Item::CCoin::~CCoin()
 {
 	Release();
+}
+
+void Item::CCoin::Effect(CPlayer* const pPlayer)
+{
+	pPlayer->AddScore(100);
 }
 
 Item::CLife::CLife(CGameWorld& world, float fX, float fY) :
@@ -113,14 +148,22 @@ Item::CLife::~CLife()
 	Release();
 }
 
+void Item::CLife::Effect(CPlayer* const pPlayer)
+{
+	//10초를 지속시켜 준다.
+	pPlayer->AddScore(CPlayer::DECREASE_POINT_PER_SECOND * 10);
+}
+
 void Item::CLife::Render(const HDC& hDC)
 {
 	HBRUSH hRedBrush = CreateSolidBrush(RGB(255, 128, 128));
 	HBRUSH hPrevBrush = (HBRUSH)SelectObject(hDC, hRedBrush);
+	auto& app = (CMainApp&)GetGameWorld();
+	auto pMap = app.GetMap();
 	Rectangle(hDC,
-		static_cast<int>(m_fX - m_realScale * ItemMaxSize / 2.f),
+		static_cast<int>(pMap->GetConvX(m_fX) - m_realScale * ItemMaxSize / 2.f),
 		static_cast<int>(m_fY - m_realScale * ItemMaxSize / 2.f),
-		static_cast<int>(m_fX + m_realScale * ItemMaxSize / 2.f),
+		static_cast<int>(pMap->GetConvX(m_fX) + m_realScale * ItemMaxSize / 2.f),
 		static_cast<int>(m_fY + m_realScale * ItemMaxSize / 2.f)
 	);
 	SelectObject(hDC, hPrevBrush);
