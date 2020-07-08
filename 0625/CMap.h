@@ -25,14 +25,19 @@ public:
 	float GetKillX(void) const { return m_fKillX; }
 	size_t GetBlockWidth(void) const { return m_iBlockWidth; }
 	size_t GetBlockHeight(void) const { return m_iBlockHeight; }
+	void SlowMap(float _fSlowTime);
 
 	void SetBlockUnderPlayer(CBlock* _pBlock);
 	CBlock* GetBlockUnderPlayer(void) const;
 
 private:
+	void UpdateSlow(void);
+
+private:
 	CGameWorld& m_rGameWorld;		// Block에 전달한 GameWorld 참조자 변수
 	float m_fMapX;					// Map의 전체적인 X좌표 // Y 좌표는 고정
-	float m_fMapSpeed;				// X축 이동에 대한 Map의 이동속도(양수 => 왼쪽으로 맵이 이동)
+	float m_fMapMaxSpeed;			// X축 이동에 대한 Map의 최대이동속도(양수 => 왼쪽으로 맵이 이동)
+	float m_fMapSpeed;				// 평상시 맵 속도 (평소 : 최대치, 슬로우 : 최대치 절반)
 	float m_fKillX;					// Block이 사라지는 지점
 	float m_fRespawnX;				// KillX를 넘은 Block이 리스폰되는 지점의 X
 	float m_fFirstBlockX;			// 첫 번째 블록의 X좌표 (기준이 되는 Block이다.)
@@ -44,6 +49,9 @@ private:
 	vector<CObj*> m_vecBlocks;		// Block들
 	vector<CObj*> m_vecObstacles;	// 장애물들
 
+	bool m_bIsSlow;
+	float m_fSlowTime;
+	float m_fSlowElapsedTime;
 	CBlock* m_pBlockUnderPlayer;
 };
 

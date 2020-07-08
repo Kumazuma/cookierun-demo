@@ -28,6 +28,7 @@ void CObstacle::LateUpdate(void)
 	if (IsCollided(pPlayer->GetRect(), GetConvRect())) {
 		// TODO1 : 플레이어에게 데미지를 준다.
 		// TODO2 : 맵의 속도가 일시적으로 느려진다.
+		m_rMap.SlowMap(1.3f);
 	}
 }
 

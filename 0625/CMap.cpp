@@ -10,11 +10,14 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 	:
 	m_rGameWorld(_rGameWorld),
 	m_fMapX(0.f),					// Map의 전체적인 X좌표 // Y 좌표는 고정
-	m_fMapSpeed(0.f),				// X축 이동에 대한 Map의 이동속도
+	m_fMapMaxSpeed(0.f),				// X축 이동에 대한 Map의 이동속도
+	m_fMapSpeed(0.f),
 	m_fFirstBlockX(0.f),			// 첫 번째 블록의 X좌표 (기준이 되는 Block이다.)
 	m_fFirstBlockY(WINCY >> 1),		// 첫 번재 블록의 Y좌표 (기준이 되는 Block이다.)
 	m_iBlockWidth(100.f),			// Block의 너비
 	m_iBlockHeight(100.f),			// Block의 높이
+	m_fSlowElapsedTime(0.f),
+	m_bIsSlow(false),
 	m_pBlockUnderPlayer(nullptr)
 {
 	FILE* fpIn;
@@ -24,12 +27,12 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 	if (!err) {
 		fscanf_s(fpIn, "%f %f %f %f %d %d",
 			&m_fMapX,
-			&m_fMapSpeed,
+			&m_fMapMaxSpeed,
 			&m_fFirstBlockX,
 			&m_fFirstBlockY,
 			&m_iBlockWidth,
 			&m_iBlockHeight);
-
+		m_fMapSpeed = m_fMapMaxSpeed;
 		
 
 		CObj* pBlock = nullptr;
@@ -110,6 +113,7 @@ CMap::~CMap()
 
 void CMap::Update(void)
 {
+	UpdateSlow();
 	m_fMapX += m_fMapSpeed;
 	if (m_fMapX >= GetMapDistance()) m_fMapX -= GetMapDistance();
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->Update(); } }
@@ -158,6 +162,26 @@ float CMap::GetConvRight(float _fX) const
 CBlock * CMap::GetBlockUnderPlayer(void) const
 {
 	return m_pBlockUnderPlayer;
+}
+
+void CMap::UpdateSlow(void)
+{
+	if (m_bIsSlow) {
+		m_fSlowElapsedTime += m_rGameWorld.GetTimer()->GetElapsedTimePerFrame();
+		if (m_fSlowElapsedTime >= m_fSlowTime) {
+			m_fMapSpeed = m_fMapMaxSpeed;
+			m_bIsSlow = false;
+			m_fSlowElapsedTime = 0.f;
+		}
+	}
+}
+
+void CMap::SlowMap(float _fSlowTime)
+{
+	m_bIsSlow = true;
+	m_fSlowTime = _fSlowTime;
+	m_fSlowElapsedTime = 0.f;
+	m_fMapSpeed = m_fMapMaxSpeed / 2.f;
 }
 
 void CMap::SetBlockUnderPlayer(CBlock * _pBlock)
