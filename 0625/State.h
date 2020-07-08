@@ -26,18 +26,18 @@ namespace State
 	protected:
 		//인스턴스화되면 안된다.
 		Jump() = default;
-		//중력에 따라 속도가 제어되는 것을 관리한다. 만약 땅에 닿았으면 true를 반환한다.
-		bool GravityMove(CObj* const, float timedalta);
+		//중력에 따라 속도가 제어되는 것을 관리한다. 
+		void GravityMove(CObj* const, float timedalta);
+		//만약 땅에 닿았으면 true를 반환한다.
+		bool IsReturn(CObj* const);
 	};
 	class SingleJump : public Jump
 	{
 	public:
 		SingleJump();
-		void OnLoaded(CObj* const) override;
 		virtual IPlayerState* Update(CObj* const, float timedelta)override;
 	private:
 		bool m_bReachedTop;
-		float m_fPrevSpeed;
 	};
 	class DoubleJump : public Jump
 	{
