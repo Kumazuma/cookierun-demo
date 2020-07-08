@@ -23,7 +23,11 @@ CMainApp::~CMainApp()
 void CMainApp::Ready(void)
 {
 	// 얻어왔으면 반드시 지워주기!
-	m_hDC = GetDC(g_hWND);
+	m_hWindowDC = GetDC(g_hWND);
+	//Double Buffering
+	m_hBackbuffer = CreateCompatibleBitmap(m_hWindowDC, WINCX, WINCY);
+	m_hBackbufferDC = CreateCompatibleDC(m_hWindowDC);
+	SelectObject(m_hBackbufferDC, m_hBackbuffer);
 
 	srand((time_t)time(nullptr));
 
@@ -61,10 +65,12 @@ void CMainApp::Render(void)
 {
 	ClearWindow();
 
-	m_pViewSpace->Render(m_hDC);
-	m_pMap->Render(m_hDC);
-	for (auto& pItem : m_items) { pItem->Render(m_hDC); }
-	m_pPlayer->Render(m_hDC);
+	m_pViewSpace->Render(m_hBackbufferDC);
+	m_pMap->Render(m_hBackbufferDC);
+	for (auto& pItem : m_items) { pItem->Render(m_hBackbufferDC); }
+	m_pPlayer->Render(m_hBackbufferDC);
+
+	BitBlt(m_hWindowDC, 0, 0, WINCX, WINCY, m_hBackbufferDC, 0, 0, SRCCOPY);
 }
 
 void CMainApp::Release(void)
@@ -73,10 +79,18 @@ void CMainApp::Release(void)
 	DeleteSafe(m_pViewSpace);
 	DeleteSafe(m_pMap);
 	DeleteSafe(m_items);
-	ReleaseDC(g_hWND, m_hDC);
+	
+	DeleteDC(m_hBackbufferDC);
+	DeleteObject(m_hBackbuffer);
+	ReleaseDC(g_hWND, m_hWindowDC);
+}
+
+void CMainApp::OnResize()
+{
 }
 
 inline void CMainApp::ClearWindow(void)
 {
-	Rectangle(m_hDC, 0, 0, WINCX, WINCY);
+	RECT rc{0,0, WINCX, WINCY};
+	FillRect(m_hBackbufferDC, &rc, (HBRUSH)GetStockObject(WHITE_BRUSH));
 }

@@ -17,6 +17,8 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+CMainApp tMain;
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -40,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MY0625));
 
-	CMainApp tMain;
+	
 	tMain.Ready();
 
 	MSG msg;
@@ -114,8 +116,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	TCHAR szTitle[64] = _T("ÃÑ¾Ë»óÀÚ2");
 	RECT rc = { 0, 0, WINCX, WINCY };
-	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
-	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	constexpr auto WS = WS_SYSMENU | WS_MINIMIZEBOX | WS_CAPTION;
+	AdjustWindowRect(&rc, WS, false);
+	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS,
 		CW_USEDEFAULT, 0, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
@@ -169,6 +172,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 	}
 		break;*/
+	
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;

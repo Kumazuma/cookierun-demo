@@ -60,7 +60,7 @@ int CPlayer::Update(void)
 			m_pPlayerState = nextState;
 			m_pPlayerState->OnLoaded(this);
 		}
-		m_hp -= static_cast<HP>(delta * DECREASE_POINT_PER_SECOND);
+		m_hp -= delta * DECREASE_POINT_PER_SECOND;
 		static wchar_t tmp[1024]{};
 		static size_t len = 0;
 		swprintf_s(tmp, L"%f", m_hp * 100.f / CPlayer::MAX_HP);
