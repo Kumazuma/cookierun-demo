@@ -7,8 +7,8 @@
 #include <assert.h>
 constexpr float ItemMaxSize = 40.f;
 
-CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
-	CObj{world, fX, fY},
+CItem::CItem(CGameWorld& world, CMap& _rMap, float fX, float fY, CItem::Type type):
+	CMapObj(world, _rMap, fX, fY, 0.f, 0.f),
 	m_realScale{1.f},
 	m_itemType{type},
 	m_sign{-1}
@@ -17,15 +17,15 @@ CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
 	SetHeight(ItemMaxSize);
 }
 template<>
-CObj* CItem::CreateItem<Item::CCoin>(CGameWorld& world, float fX, float fY)
+CObj* CItem::CreateItem<Item::CCoin>(CGameWorld& world, CMap& _rMap, float fX, float fY)
 {
-	auto* pCoin{ new Item::CCoin{world, fX, fY} };
+	auto* pCoin{ new Item::CCoin{world, _rMap, fX, fY} };
 	return pCoin;
 }
 template<>
-CObj* CItem::CreateItem<Item::CLife>(CGameWorld& world, float fX, float fY)
+CObj* CItem::CreateItem<Item::CLife>(CGameWorld& world, CMap& _rMap, float fX, float fY)
 {
-	auto* pLife{ new Item::CLife{world, fX, fY} };
+	auto* pLife{ new Item::CLife{world, _rMap, fX, fY} };
 	return pLife;
 }
 int CItem::Update(void)
@@ -53,30 +53,7 @@ int CItem::Update(void)
 	}
 	return 0;
 }
-bool CItem::IsBlockInView(void)
-{
-	RECT rectViewSpace = TO_GAMEWORLD(GetGameWorld()).GetViewSpace()->GetRect();
 
-	return IsCollided(GetConvRect(), rectViewSpace);
-}
-RECT CItem::GetConvRect(void) const
-{
-	RECT rc = {
-		GetConvLeft(),
-		GetTop(),
-		GetConvRight(),
-		GetBottom()
-	};
-	return rc;
-}
-float CItem::GetConvLeft(void) const
-{
-	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvLeft(GetX());
-}
-float CItem::GetConvRight(void) const
-{
-	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvRight(GetX());
-}
 void CItem::LateUpdate(void)
 {
 	auto& app = (CMainApp&) GetGameWorld();
@@ -102,8 +79,8 @@ void CItem::LateUpdate(void)
 		SetValid(false);
 	}
 }
-Item::CCoin::CCoin(CGameWorld& world, float fX, float fY) :
-	CItem{ world, fX, fY , CItem::Type::COIN }
+Item::CCoin::CCoin(CGameWorld& world, CMap& _rMap, float fX, float fY) :
+	CItem{ world, _rMap, fX, fY , CItem::Type::COIN }
 {
 	m_fSpeed = 3.f;
 }
@@ -122,8 +99,6 @@ void Item::CCoin::Render(const HDC& hDC)
 		);
 		SelectObject(hDC, hPrevBrush);
 		DeleteObject(hYellowBrush);
-
-		
 	}
 }
 
@@ -138,8 +113,8 @@ void Item::CCoin::Effect(CPlayer* const pPlayer)
 	pPlayer->AddScore(100);
 }
 
-Item::CLife::CLife(CGameWorld& world, float fX, float fY) :
-	CItem{ world, fX, fY, CItem::Type::LIFE }
+Item::CLife::CLife(CGameWorld& world, CMap& _rMap, float fX, float fY) :
+	CItem{ world, _rMap, fX, fY, CItem::Type::LIFE }
 {
 	m_fSpeed = 1.5f;
 }

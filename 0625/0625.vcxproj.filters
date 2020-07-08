@@ -63,6 +63,9 @@
     <Filter Include="소스 파일\03.Obj\026.item">
       <UniqueIdentifier>{97c1f8c9-f04e-40b1-a958-aea0478b98a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03.Obj\028.MapObj">
+      <UniqueIdentifier>{aaa418bb-4478-48b6-be87-84f825fa08f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLayer.h">
@@ -152,6 +155,9 @@
     <ClInclude Include="CBlock.h">
       <Filter>소스 파일\03.Obj\026.Block</Filter>
     </ClInclude>
+    <ClInclude Include="CMapObj.h">
+      <Filter>소스 파일\03.Obj\028.MapObj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CLayer.cpp">
@@ -217,14 +223,17 @@
     <ClCompile Include="State.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="item.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="CBlock.cpp">
+      <Filter>소스 파일\03.Obj\026.Block</Filter>
+    </ClCompile>
+    <ClCompile Include="CMapObj.cpp">
+      <Filter>소스 파일\03.Obj\028.MapObj</Filter>
     </ClCompile>
     <ClCompile Include="CMap.cpp">
       <Filter>소스 파일\04.Generator</Filter>
     </ClCompile>
-    <ClCompile Include="CBlock.cpp">
-      <Filter>소스 파일\03.Obj\026.Block</Filter>
+    <ClCompile Include="item.cpp">
+      <Filter>소스 파일\03.Obj\026.item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,8 +7,7 @@
 
 CBlock::CBlock(CGameWorld& _rGameWorld, CMap& _rMap, float _fX, float _fY, size_t _iWidth, size_t _iHeight)
 	:
-	CObj(_rGameWorld, _fX, _fY, _iWidth, _iHeight, 0.f),
-	m_rMap(_rMap)
+	CMapObj(_rGameWorld, _rMap, _fX, _fY, _iWidth, _iHeight)
 {
 }
 
@@ -52,8 +51,8 @@ void CBlock::LateUpdate(void)
 		//}
 	}
 
-	if (m_rMap.GetConvLeft(GetX()) < pPlayer->GetRight()		// 플레이어 발끝자락이 블록 좌우 내에 있고
-		&& pPlayer->GetRight() <= m_rMap.GetConvRight(GetX())
+	if (GetConvLeft() < pPlayer->GetRight()		// 플레이어 발끝자락이 블록 좌우 내에 있고
+		&& pPlayer->GetRight() <= GetConvRight()
 		&& pPlayer->GetY() <= GetY()) {							// 플레이어가 블록보다 위에 있을 경우.
 		m_rMap.SetBlockUnderPlayer(this);
 	}
@@ -64,32 +63,4 @@ void CBlock::Render(const HDC & _hdc)
 	if (IsBlockInView()) {
 		Rectangle(_hdc, m_rMap.GetConvX(GetX()) - (GetWidth() >> 1) , GetTop(), m_rMap.GetConvX(GetX()) + (GetWidth() >> 1), GetBottom());
 	}
-}
-
-bool CBlock::IsBlockInView(void)
-{
-	RECT rectViewSpace = TO_GAMEWORLD(GetGameWorld()).GetViewSpace()->GetRect();
-
-	return IsCollided(GetConvRect(), rectViewSpace);
-}
-
-RECT CBlock::GetConvRect(void) const
-{
-	RECT rc = {
-		GetConvLeft(),
-		GetTop(),
-		GetConvRight(),
-		GetBottom()
-	};
-	return rc;
-}
-
-float CBlock::GetConvLeft(void) const
-{
-	return m_rMap.GetConvLeft(GetX());
-}
-
-float CBlock::GetConvRight(void) const
-{
-	return m_rMap.GetConvRight(GetX());
 }

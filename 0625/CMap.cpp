@@ -50,7 +50,7 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 			// 블록 위에 오브젝트가 존재한다면 오브젝트 생성 정보를 만들어 저장해둔다.
 			if (bIsObjectsOnBlock == 1) {
 				fscanf_s(fpIn, "%d", &iObjectsHeightIndex);
-				iObjectsHeightIndex = 1;
+				iObjectsHeightIndex += 1;
 				while (true) {
 					fscanf_s(fpIn, "%d", &eObjectType);
 					if (eObjectType == -2) break;
@@ -85,10 +85,10 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 						case OBJ::TYPE_OBSTACLE:
 							break;
 						case OBJ::TYPE_COIN:
-							m_vecItems.emplace_back(CItem::CreateItem<Item::CCoin>(m_rGameWorld, fCurrentX, rObjGenInfo.fHeight));
+							m_vecItems.emplace_back(CItem::CreateItem<Item::CCoin>(m_rGameWorld, *this, fCurrentX, pBlock->GetY() - rObjGenInfo.fHeight));
 							break;
 						case OBJ::TYPE_HEALTH:
-							m_vecItems.emplace_back(CItem::CreateItem<Item::CLife>(m_rGameWorld, fCurrentX, rObjGenInfo.fHeight));
+							m_vecItems.emplace_back(CItem::CreateItem<Item::CLife>(m_rGameWorld, *this, fCurrentX, pBlock->GetY() - rObjGenInfo.fHeight));
 							break;
 						}
 					}

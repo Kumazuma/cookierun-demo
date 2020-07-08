@@ -1,11 +1,11 @@
 #pragma once
-#include "CObj.h"
+#include "CMapObj.h"
 
 class CGameWorld;
 class CMap;
 
 class CBlock :
-	public CObj
+	public CMapObj
 {
 public:
 	CBlock(CGameWorld& _rGameWorld, CMap& _rMap, float _fX, float _fY, size_t _iWidth, size_t _iHeight);
@@ -17,15 +17,5 @@ public:
 	virtual void LateUpdate(void);
 	virtual void Render(const HDC& _hdc);
 	virtual void Release(void) {};
-
-public:
-	bool IsBlockInView(void);
-	RECT GetConvRect(void) const;
-	float GetConvLeft(void) const;
-	float GetConvRight(void) const;
-
-
-private:
-	CMap& m_rMap;
 };
 

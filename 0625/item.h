@@ -1,25 +1,20 @@
 #pragma once
-#include"CObj.h"
+#include"CMapObj.h"
 class CPlayer;
-class CItem : public CObj
+
+class CItem : public CMapObj
 {
 public:
 	enum class Type{NONE, COIN, LIFE, END};
 	template<typename _T> 
-	static CObj* CreateItem(CGameWorld& world, float fX, float fY);
+	static CObj* CreateItem(CGameWorld& world, CMap& _rMap, float fX, float fY);
 	int Update(void) override;
 	void LateUpdate(void) override;
 	CItem::Type GetType()const { return m_itemType; }
 	virtual void Effect(CPlayer* const) = 0;
 
-public:
-	bool IsBlockInView(void);
-	RECT GetConvRect(void) const;
-	float GetConvLeft(void) const;
-	float GetConvRight(void) const;
-
 protected:
-	CItem(CGameWorld& world, float fX, float fY, CItem::Type type = Type::NONE);
+	CItem(CGameWorld& world, CMap& _rMap, float fX, float fY, CItem::Type type = Type::NONE);
 	Type m_itemType;
 	float m_realScale;/*[0, 1]*/
 	char m_sign;/* -1, 1*/
@@ -34,7 +29,7 @@ namespace Item
 		void Effect(CPlayer* const) override;
 		void Render(const HDC& hDC) override;
 	private:
-		CCoin(CGameWorld& world, float fX, float fY);
+		CCoin(CGameWorld& world, CMap& _rMap, float fX, float fY);
 	};
 	class CLife : public CItem
 	{
@@ -44,7 +39,7 @@ namespace Item
 		void Effect(CPlayer* const) override;
 		void Render(const HDC& hDC) override;
 	private:
-		CLife(CGameWorld& world, float fX, float fY);
+		CLife(CGameWorld& world, CMap& _rMap, float fX, float fY);
 	};
 }
 

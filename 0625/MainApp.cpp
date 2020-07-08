@@ -32,11 +32,11 @@ void CMainApp::Ready(void)
 		m_pPlayer = new CPlayer(*this, 20, WINCY >> 1);
 		m_pPlayer->Ready();
 	}
-	m_items.push_back(CItem::CreateItem<Item::CCoin>(*this, 100, 100));
+	/*m_items.push_back(CItem::CreateItem<Item::CCoin>(*this, 100, 100));
 	m_items.push_back(CItem::CreateItem<Item::CCoin>(*this, 200, 100));
 	m_items.push_back(CItem::CreateItem<Item::CCoin>(*this, 300, 100));
 	m_items.push_back(CItem::CreateItem<Item::CLife>(*this, 400, 100));
-	m_items.push_back(CItem::CreateItem<Item::CLife>(*this, 500, 100));
+	m_items.push_back(CItem::CreateItem<Item::CLife>(*this, 500, 100));*/
 	m_pViewSpace = new CSpace(*this, WINCX >> 1, WINCY >> 1, WINCX, WINCY, nullptr);
 
 	m_pMap = new CMap(*this, "../MapDatas/Map1.txt");
