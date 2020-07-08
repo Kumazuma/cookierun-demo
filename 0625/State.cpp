@@ -36,26 +36,27 @@ IPlayerState* State::Jump::Update(CObj* const pObject, float fTimedelta)
     return this;
 }
 
-bool State::Jump::GravityMove(CObj* const pObject, float fTimedelta)
+void State::Jump::GravityMove(CObj* const pObject, float fTimedelta)
 {
     //플레이어의 좌표 Y가 지면보다 낮다면 땅바닥으로 푹 꺼진 것이다.
     //플레이어의 좌표를 지면과 같은 위치로 맞춰준다.
     float fSpeed = pObject->GetSpeed();
     bool bResult = false;
     float fY = pObject->GetY();
-    if (fY >= GROUND_HEIGHT)
+    fSpeed += -800.0f * fTimedelta;
+    pObject->SetSpeed(fSpeed);
+
+}
+
+bool State::Jump::IsReturn(CObj* const pObject)
+{
+    float fY = pObject->GetY();
+    if (fY >= GROUND_HEIGHT - 100 && pObject->GetSpeed() <= 0.f)
     {
-        bResult = true;
         pObject->SetY(GROUND_HEIGHT);
         return true;
     }
-    else
-    {
-        //스피드는 중력 가속도를 받아 줄어든다.
-        fSpeed += -800.0f * fTimedelta;
-    }
-    pObject->SetSpeed(fSpeed);
-    return bResult;
+    return false;
 }
 
 State::SingleJump::SingleJump():
@@ -63,21 +64,15 @@ State::SingleJump::SingleJump():
 {
 
 }
-
-void State::SingleJump::OnLoaded(CObj* const pObject)
-{
-    Jump::OnLoaded(pObject);
-    m_fPrevSpeed = pObject->GetSpeed();
-}
-
 IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
 {
     Jump::Update(pObject, fTimedelta);
-    if (Jump::GravityMove(pObject, fTimedelta))
+    Jump::GravityMove(pObject, fTimedelta);
+    if (IsReturn(pObject))
     {
         return new Default{};
     }
-    if (m_bReachedTop == false && m_fPrevSpeed * pObject->GetSpeed() <= 0.f)
+    if (m_bReachedTop == false && pObject->GetSpeed() <= 0.f)
     {
         m_bReachedTop = true;
     }
@@ -86,7 +81,6 @@ IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
         //TODO: double Jump
         return new DoubleJump {};
     }
-    m_fPrevSpeed = pObject->GetSpeed();
     //아무런 변화가 없으면 자신을 반환
     return this;
 }
@@ -94,7 +88,8 @@ IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
 IPlayerState* State::DoubleJump::Update(CObj* const pObject, float fTimedelta)
 {
     Jump::Update(pObject, fTimedelta);
-    if (Jump::GravityMove(pObject, fTimedelta))
+    Jump::GravityMove(pObject, fTimedelta);
+    if (IsReturn(pObject))
     {
         //TODO: Default State
         return new Default{};

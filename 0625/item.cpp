@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "item.h"
+#include "CGameWorld.h"
 constexpr float ItemMaxSize = 100.f;
 
 CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
@@ -26,10 +27,10 @@ CObj* CItem::CreateItem<Item::CLife>(CGameWorld& world, float fX, float fY)
 int CItem::Update(void)
 {
 	//TODO: 실제 타임 델타가 필요함
-	float fTimeDelta = 0.016f;
+	float fTimeDelta = GetGameWorld().GetTimer()->GetElapsedTimePerFrame();
 	m_realScale += m_sign  * m_fSpeed * fTimeDelta; //1초당 3%씩 스케일이 변한다.
 	//작아지는 중인데, 스케일이 0보다 떨어지면,
-	if (m_sign == -1 && m_realScale < 0.f)
+	if (m_sign == -1 && m_realScale < 0.2f)
 	{
 		m_sign = 1;
 	}
