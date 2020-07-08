@@ -49,6 +49,7 @@ namespace State
 	class DoubleJump : public Jump
 	{
 	public:
+		void OnLoaded(CObj* const) override;
 		IPlayerState* Update(CObj* const, float timedelta) override;
 	};
 	class Slide : public Gravity
@@ -59,5 +60,6 @@ namespace State
 	private:
 		float m_fPrevHeight;
 		float m_fPrevPosY;
+		float m_fprevWidth;
 	};
 }

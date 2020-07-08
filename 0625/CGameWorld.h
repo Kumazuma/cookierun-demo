@@ -14,7 +14,10 @@ public:
 	virtual void LateUpdate(void) = 0;
 	virtual void Render(void) = 0;
 	virtual void Release(void) = 0;
-
+	virtual void Start(void) = 0;
+	virtual void Stop(void) = 0;
+	virtual void GameOver(void) = 0;
+	virtual bool IsRunning(void) const = 0;
 public:
 	void RunTick(void);
 

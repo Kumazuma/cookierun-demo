@@ -5,9 +5,9 @@
 #include "MainApp.h"
 #include "CMap.h"
 #include "CBlock.h"
-constexpr float GROUND_HEIGHT = static_cast<float>(static_cast<int>(WINCY / 1.5f));
-constexpr float JUMP_SPPED = 500.f;
-constexpr float GRAVITY_ACCELATION = -600.f;
+
+constexpr float JUMP_SPPED = 600.f;
+constexpr float GRAVITY_ACCELATION = -800.f;
 void State::Default::OnLoaded(CObj* const pObject)
 {
    
@@ -53,7 +53,27 @@ State::Gravity::Gravity():
 
 void State::Gravity::GravityMove(CObj* const pObject, float fTimedelta)
 {
-    m_fSpeed += GRAVITY_ACCELATION * fTimedelta;
+    
+    float fY = pObject->GetY();
+    float fPlayerBottom = fY + pObject->GetHeight() / 2.f;
+    auto& mainApp = (CMainApp&)pObject->GetGameWorld();
+    CMap* pMap = mainApp.GetMap();
+    auto* pBlock = pMap->GetBlockUnderPlayer();
+    float fBlockTop = 0;
+    if (pBlock == nullptr)
+    {
+        m_fSpeed += GRAVITY_ACCELATION * fTimedelta;
+    }
+    else
+    {
+
+        fBlockTop = pBlock->GetY() - pBlock->GetHeight() / 2.f;
+        if (fBlockTop > fPlayerBottom)
+        {
+            m_fSpeed += GRAVITY_ACCELATION * fTimedelta;
+        }
+        
+    }
 }
 
 bool State::Gravity::IsReturn(CObj* const pObject)
@@ -81,7 +101,7 @@ bool State::Gravity::IsReturn(CObj* const pObject)
 State::SingleJump::SingleJump():
     m_bReachedTop{ false }
 {
-
+    
 }
 IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
 {
@@ -104,6 +124,11 @@ IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
     return this;
 }
 
+void State::DoubleJump::OnLoaded(CObj* const)
+{
+    m_fSpeed = JUMP_SPPED ;
+}
+
 IPlayerState* State::DoubleJump::Update(CObj* const pObject, float fTimedelta)
 {
     Gravity::Update(pObject, fTimedelta);
@@ -120,16 +145,19 @@ IPlayerState* State::DoubleJump::Update(CObj* const pObject, float fTimedelta)
 void State::Slide::OnLoaded(CObj* const pObject)
 {
     m_fPrevHeight = pObject->GetHeight();
+    m_fprevWidth = pObject->GetWidth();
     m_fPrevPosY = pObject->GetY();
     //슬라이딩 할 때는 높이를 1/2으로 만든다.
     float fY = m_fPrevPosY + m_fPrevHeight / 4;
-
+    pObject->SetWidth(static_cast<size_t>( m_fprevWidth * 1.5f) );
     pObject->SetHeight(m_fPrevHeight / 2);
     pObject->SetY(fY);
 }
 
 IPlayerState* State::Slide::Update(CObj* const pObject, float fTimedelta)
 {
+    Gravity::Update(pObject, fTimedelta);
+    Gravity::GravityMove(pObject, fTimedelta);
     IPlayerState* pNextState = nullptr;
     //점프 명령어를 우선한다.
     if (IS_PRESS_KEY_(VK_SPACE))
@@ -143,6 +171,7 @@ IPlayerState* State::Slide::Update(CObj* const pObject, float fTimedelta)
     if (pNextState->IsNull() == false)
     {
         pObject->SetHeight(m_fPrevHeight);
+        pObject->SetWidth(static_cast<size_t>(m_fprevWidth));
         pObject->SetY(m_fPrevPosY);
         return pNextState;
     }

@@ -71,7 +71,7 @@ int CPlayer::Update(void)
 			SetWindowTextW(g_hWND, L"Game Over!");
 			//SetValid(false);
 			//TODO: ªÁ∏¡√≥∏Æ
-			//app.GameOver();
+			GetGameWorld().GameOver();
 		}
 	}
 	return 0;

@@ -16,7 +16,10 @@ public:
 	void LateUpdate(void);
 	void Render(void);
 	void Release(void);
-
+	void Start(void);
+	void Stop(void);
+	void GameOver(void);
+	bool IsRunning(void) const;
 public:
 	CObj* GetPlayer(void) const { return m_pPlayer; }
 	const CObj* GetViewSpace(void) const { return m_pViewSpace; }
@@ -27,6 +30,7 @@ private:
 	inline void ClearWindow(void);
 
 private:
+	bool m_bIsRun;
 	HDC m_hWindowDC;
 	HBITMAP m_hBackbuffer;
 	HDC m_hBackbufferDC;
