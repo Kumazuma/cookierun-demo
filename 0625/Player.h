@@ -26,7 +26,7 @@ public:
 	int GetScore() const { return m_nScore; }
 	void UseItem(const CObj* const pItem);
 private:
-	IPlayerState* m_pPlayerState;
+	IPlayerState* m_pMoveState;
 	HP m_hp;
 	int m_nScore;
 };

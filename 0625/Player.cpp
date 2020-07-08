@@ -33,32 +33,32 @@ CPlayer::CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth /
 
 CPlayer::~CPlayer()
 {
-	if (m_pPlayerState != nullptr)
+	if (m_pMoveState != nullptr)
 	{
-		delete m_pPlayerState;
-		m_pPlayerState = nullptr;
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
 	}
 }
 
 void CPlayer::Ready(void)
 {
-	m_pPlayerState = new State::Default{};
-	m_pPlayerState->OnLoaded(this);
+	m_pMoveState = new State::Move::Default{};
+	m_pMoveState->OnLoaded(this);
 }
 
 int CPlayer::Update(void)
 {
-	if (m_pPlayerState != nullptr)
+	if (m_pMoveState != nullptr)
 	{
 		const float delta = GetGameWorld().GetTimer()->GetElapsedTimePerFrame();
 		//TODO: 나중에 실제 델타 값을 넣을 수 있어야 함.
-		IPlayerState* nextState = m_pPlayerState->Update(this, delta);
-		if (nextState != m_pPlayerState)
+		IPlayerState* nextState = m_pMoveState->Update(this, delta);
+		if (nextState != m_pMoveState)
 		{
 			assert(nextState != nullptr);
-			delete m_pPlayerState;
-			m_pPlayerState = nextState;
-			m_pPlayerState->OnLoaded(this);
+			delete m_pMoveState;
+			m_pMoveState = nextState;
+			m_pMoveState->OnLoaded(this);
 		}
 		m_hp -= delta * DECREASE_POINT_PER_SECOND;
 		static wchar_t tmp[1024]{};

@@ -8,11 +8,11 @@
 
 constexpr float JUMP_SPPED = 600.f;
 constexpr float GRAVITY_ACCELATION = -800.f;
-void State::Default::OnLoaded(CObj* const pObject)
+void State::Move::Default::OnLoaded(CObj* const pObject)
 {
    
 }
-IPlayerState* State::Default::Update(CObj* const pObject, float fTimedelta)
+IPlayerState* State::Move::Default::Update(CObj* const pObject, float fTimedelta)
 {
     Gravity::Update(pObject, fTimedelta);
     Gravity::GravityMove(pObject, fTimedelta);
@@ -28,12 +28,12 @@ IPlayerState* State::Default::Update(CObj* const pObject, float fTimedelta)
     return this;
 }
 
-void State::Jump::OnLoaded(CObj* const pObject)
+void State::Move::Jump::OnLoaded(CObj* const pObject)
 {
     m_fSpeed = JUMP_SPPED;
 }
 
-IPlayerState* State::Gravity::Update(CObj* const pObject, float fTimedelta)
+IPlayerState* State::Move::Gravity::Update(CObj* const pObject, float fTimedelta)
 {
     auto& mainApp = (CMainApp&)pObject->GetGameWorld();
     CMap* pMap = mainApp.GetMap();
@@ -45,13 +45,13 @@ IPlayerState* State::Gravity::Update(CObj* const pObject, float fTimedelta)
     return this;
 }
 
-State::Gravity::Gravity():
+State::Move::Gravity::Gravity():
     m_fSpeed{0.f}
 {
     
 }
 
-void State::Gravity::GravityMove(CObj* const pObject, float fTimedelta)
+void State::Move::Gravity::GravityMove(CObj* const pObject, float fTimedelta)
 {
     
     float fY = pObject->GetY();
@@ -76,7 +76,7 @@ void State::Gravity::GravityMove(CObj* const pObject, float fTimedelta)
     }
 }
 
-bool State::Gravity::IsReturn(CObj* const pObject)
+bool State::Move::Gravity::IsReturn(CObj* const pObject)
 {
     float fY = pObject->GetY();
     float fPlayerBottom = fY + pObject->GetHeight() / 2.f;
@@ -98,12 +98,12 @@ bool State::Gravity::IsReturn(CObj* const pObject)
     }
     return false;
 }
-State::SingleJump::SingleJump():
+State::Move::SingleJump::SingleJump():
     m_bReachedTop{ false }
 {
     
 }
-IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
+IPlayerState* State::Move::SingleJump::Update(CObj* const pObject, float fTimedelta)
 {
     Gravity::Update(pObject, fTimedelta);
     Gravity::GravityMove(pObject, fTimedelta);
@@ -124,12 +124,12 @@ IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
     return this;
 }
 
-void State::DoubleJump::OnLoaded(CObj* const)
+void State::Move::DoubleJump::OnLoaded(CObj* const)
 {
     m_fSpeed = JUMP_SPPED ;
 }
 
-IPlayerState* State::DoubleJump::Update(CObj* const pObject, float fTimedelta)
+IPlayerState* State::Move::DoubleJump::Update(CObj* const pObject, float fTimedelta)
 {
     Gravity::Update(pObject, fTimedelta);
     GravityMove(pObject, fTimedelta);
@@ -142,7 +142,7 @@ IPlayerState* State::DoubleJump::Update(CObj* const pObject, float fTimedelta)
     return this;
 }
 
-void State::Slide::OnLoaded(CObj* const pObject)
+void State::Move::Slide::OnLoaded(CObj* const pObject)
 {
     m_fPrevHeight = pObject->GetHeight();
     m_fprevWidth = pObject->GetWidth();
@@ -154,7 +154,7 @@ void State::Slide::OnLoaded(CObj* const pObject)
     pObject->SetY(fY);
 }
 
-IPlayerState* State::Slide::Update(CObj* const pObject, float fTimedelta)
+IPlayerState* State::Move::Slide::Update(CObj* const pObject, float fTimedelta)
 {
     Gravity::Update(pObject, fTimedelta);
     Gravity::GravityMove(pObject, fTimedelta);
@@ -168,7 +168,7 @@ IPlayerState* State::Slide::Update(CObj* const pObject, float fTimedelta)
     {
         pNextState = new Default{};
     }
-    if (pNextState->IsNull() == false)
+    if (pNextState != nullptr)
     {
         pObject->SetHeight(m_fPrevHeight);
         pObject->SetWidth(static_cast<size_t>(m_fprevWidth));
