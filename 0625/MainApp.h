@@ -21,7 +21,8 @@ public:
 	CObj* GetPlayer(void) const { return m_pPlayer; }
 	const CObj* GetViewSpace(void) const { return m_pViewSpace; }
 	list<CObj*>& GetItems(void) { return m_items; }
-	CMap* GetMap() { return m_pMap; }
+	CMap* GetMap(void) { return m_pMap; }
+
 private:
 	inline void ClearWindow(void);
 

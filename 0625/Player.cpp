@@ -7,6 +7,8 @@
 #include "Shield.h"
 #include "MainApp.h"
 #include "State.h"
+#include "CMap.h"
+#include "CBlock.h"
 #include <assert.h>
 #include "CMap.h"
 #include "CBlock.h"
