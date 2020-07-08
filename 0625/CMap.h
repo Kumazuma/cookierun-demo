@@ -29,7 +29,7 @@ public:
 
 	void SetBlockUnderPlayer(CBlock* _pBlock);
 	CBlock* GetBlockUnderPlayer(void) const;
-
+	const vector<const CObj*>& GetObstacles() const {return (vector<const CObj*>&)m_vecObstacles;}
 private:
 	void UpdateSlow(void);
 
