@@ -107,7 +107,7 @@ void CMainApp::Start(void)
 		m_pMap = new CMap(*this, "../MapDatas/Map1.txt");
 		// 플레이어 생성
 		if (!m_pPlayer) {
-			m_pPlayer = new CPlayer(*this, 40, WINCY >> 1);
+			m_pPlayer = new CPlayer(*this, 120, WINCY >> 1);
 			m_pPlayer->Ready();
 		}
 		m_bIsRun = true;

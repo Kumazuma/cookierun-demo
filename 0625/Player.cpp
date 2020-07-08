@@ -15,7 +15,7 @@
 #include "item.h"
 CPlayer::CPlayer(CGameWorld& _rGameWorld)
 	:
-	CObj(_rGameWorld, 0, 0, ciPlayerSize, ciPlayerSize, cfPlayerSpeed, Rectangle),
+	CObj(_rGameWorld, 0, 0, ciPlayerWidth, ciPlayerHeight, cfPlayerSpeed, Rectangle),
 	m_hp{MAX_HP}
 	
 {

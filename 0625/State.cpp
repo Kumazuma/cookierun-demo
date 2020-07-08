@@ -148,9 +148,9 @@ void State::Slide::OnLoaded(CObj* const pObject)
     m_fprevWidth = pObject->GetWidth();
     m_fPrevPosY = pObject->GetY();
     //슬라이딩 할 때는 높이를 1/2으로 만든다.
-    float fY = m_fPrevPosY + m_fPrevHeight / 4;
-    pObject->SetWidth(static_cast<size_t>( m_fprevWidth * 1.5f) );
-    pObject->SetHeight(m_fPrevHeight / 2);
+    float fY = m_fPrevPosY + 2 * m_fPrevHeight / 3;
+    pObject->SetWidth(static_cast<size_t>( m_fprevWidth * 2.f) );
+    pObject->SetHeight(m_fPrevHeight / 2.f);
     pObject->SetY(fY);
 }
 

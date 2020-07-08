@@ -11,7 +11,7 @@ public:
 	constexpr static HP DECREASE_POINT_PER_SECOND = static_cast<HP>(100);
 public:
 	CPlayer(CGameWorld& _rGameWorld);
-	CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth = ciPlayerSize, size_t _iHeight = ciPlayerSize, float _fSpeed = cfPlayerSpeed);
+	CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth = ciPlayerWidth, size_t _iHeight = ciPlayerHeight, float _fSpeed = cfPlayerSpeed);
 	virtual ~CPlayer();
 
 public:
