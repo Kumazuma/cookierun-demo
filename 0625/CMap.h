@@ -23,6 +23,8 @@ public:
 	float GetMapDistance(void) const { return m_fRespawnX - m_fKillX; }
 	float GetRespawnX(void) const { return m_fRespawnX; }
 	float GetKillX(void) const { return m_fKillX; }
+	size_t GetBlockWidth(void) const { return m_iBlockWidth; }
+	size_t GetBlockHeight(void) const { return m_iBlockHeight; }
 
 	void SetBlockUnderPlayer(CBlock* _pBlock);
 	CBlock* GetBlockUnderPlayer(void) const;

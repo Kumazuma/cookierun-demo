@@ -66,6 +66,9 @@
     <Filter Include="소스 파일\03.Obj\028.MapObj">
       <UniqueIdentifier>{aaa418bb-4478-48b6-be87-84f825fa08f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03.Obj\026.Obstacle">
+      <UniqueIdentifier>{6593fe85-d315-46ac-8980-9f64c73f742a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLayer.h">
@@ -158,6 +161,9 @@
     <ClInclude Include="CMapObj.h">
       <Filter>소스 파일\03.Obj\028.MapObj</Filter>
     </ClInclude>
+    <ClInclude Include="CObstacle.h">
+      <Filter>소스 파일\03.Obj\026.Obstacle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CLayer.cpp">
@@ -234,6 +240,9 @@
     </ClCompile>
     <ClCompile Include="item.cpp">
       <Filter>소스 파일\03.Obj\026.item</Filter>
+    </ClCompile>
+    <ClCompile Include="CObstacle.cpp">
+      <Filter>소스 파일\03.Obj\026.Obstacle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

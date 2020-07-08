@@ -16,16 +16,6 @@ CBlock::~CBlock()
 {
 }
 
-void CBlock::Ready(void)
-{
-}
-
-int CBlock::Update(void)
-{
-
-
-	return 0;
-}
 
 void CBlock::LateUpdate(void)
 {
@@ -50,7 +40,7 @@ void CBlock::LateUpdate(void)
 			}
 		//}
 	}
-
+	
 	if (GetConvLeft() < pPlayer->GetRight()		// 플레이어 발끝자락이 블록 좌우 내에 있고
 		&& pPlayer->GetRight() <= GetConvRight()
 		&& pPlayer->GetY() <= GetY()) {							// 플레이어가 블록보다 위에 있을 경우.

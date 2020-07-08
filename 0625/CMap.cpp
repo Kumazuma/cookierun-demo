@@ -4,6 +4,7 @@
 #include "MainApp.h"
 #include "CGameWorld.h"
 #include "item.h"
+#include "CObstacle.h"
 
 CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 	:
@@ -32,7 +33,6 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 		
 
 		CObj* pBlock = nullptr;
-		CObj* pObject = nullptr;	// 블록 위에 생성할 오브젝트
 		int iHeightIndex = 0;
 		int iBlockNum = 0;
 		int bIsObjectsOnBlock = false;
@@ -83,6 +83,7 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 					for (auto& rObjGenInfo : vecObjGenInfos) {
 						switch (rObjGenInfo.eType) {
 						case OBJ::TYPE_OBSTACLE:
+							m_vecObstacles.emplace_back(new CObstacle(m_rGameWorld, *this, fCurrentX, pBlock->GetY() - rObjGenInfo.fHeight, GetBlockWidth() >> 1, GetBlockHeight()));
 							break;
 						case OBJ::TYPE_COIN:
 							m_vecItems.emplace_back(CItem::CreateItem<Item::CCoin>(m_rGameWorld, *this, fCurrentX, pBlock->GetY() - rObjGenInfo.fHeight));
@@ -112,6 +113,7 @@ void CMap::Update(void)
 	m_fMapX += m_fMapSpeed;
 	if (m_fMapX >= GetMapDistance()) m_fMapX -= GetMapDistance();
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->Update(); } }
+	for (auto& pObstacle : m_vecObstacles) { DO_IF_IS_VALID_OBJ(pObstacle) { pObstacle->Update(); } }
 	for (auto& pItem : m_vecItems) { DO_IF_IS_VALID_OBJ(pItem) { pItem->Update(); } }
 }
 
@@ -119,12 +121,15 @@ void CMap::LateUpdate(void)
 {
 	m_pBlockUnderPlayer = nullptr;	// 기존 플레이어 아래에 있던 블록은 플레이어 아래에 있지 않을 수 있으므로 재갱신을 위해 nullptr로 설정.
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->LateUpdate(); } }
-	for (auto& pItem : m_vecItems) { DO_IF_IS_VALID_OBJ(pItem) { pItem->LateUpdate(); } }
+	for (auto& pObstacle : m_vecObstacles) { DO_IF_IS_VALID_OBJ(pObstacle) { pObstacle->LateUpdate(); } }
+	// 아이템은 플레이어가 먹어서 사라져도 다시 순회할때 생성된다. => 무한 반복
+	for (auto& pItem : m_vecItems) {  pItem->LateUpdate(); }
 }
 
 void CMap::Render(const HDC& _hdc)
 {
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->Render(_hdc); } }
+	for (auto& pObstacle : m_vecObstacles) { DO_IF_IS_VALID_OBJ(pObstacle) { pObstacle->Render(_hdc); } }
 	for (auto& pItem : m_vecItems) { DO_IF_IS_VALID_OBJ(pItem) { pItem->Render(_hdc); } }
 }
 

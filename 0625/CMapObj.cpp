@@ -16,6 +16,21 @@ CMapObj::~CMapObj()
 {
 }
 
+void CMapObj::LateUpdate(void)
+{
+	CObj* pPlayer = TO_GAMEWORLD(GetGameWorld()).GetPlayer();
+	DO_IF_IS_VALID_OBJ(pPlayer) {
+		if (!IsValid() && pPlayer->GetRight() < GetConvLeft()) {
+			SetValid(true);
+		}
+		DO_IF_IS_VALID_OBJ(this) {
+			if (IsCollided(pPlayer->GetRect(), GetConvRect())) {
+				SetValid(false);
+			}
+		}
+	}
+}
+
 bool CMapObj::IsBlockInView(void)
 {
 	RECT rectViewSpace = TO_GAMEWORLD(GetGameWorld()).GetViewSpace()->GetRect();

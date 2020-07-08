@@ -150,6 +150,7 @@
     <ClInclude Include="CBlock.h" />
     <ClInclude Include="CMap.h" />
     <ClInclude Include="CMapObj.h" />
+    <ClInclude Include="CObstacle.h" />
     <ClInclude Include="CSpace.h" />
     <ClInclude Include="CGameWorld.h" />
     <ClInclude Include="CLayer.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="CBlock.cpp" />
     <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CMapObj.cpp" />
+    <ClCompile Include="CObstacle.cpp" />
     <ClCompile Include="CSpace.cpp" />
     <ClCompile Include="CGameWorld.cpp" />
     <ClCompile Include="CLayer.cpp" />

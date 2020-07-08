@@ -10,6 +10,8 @@ public:
 	CMapObj(CGameWorld& _rGameWorld, CMap& _rMap, float _fX, float _fY, size_t _iWidth, size_t _iHeight);
 	~CMapObj();
 
+	virtual void LateUpdate(void);
+
 public:
 	bool IsBlockInView(void);
 	RECT GetConvRect(void) const;

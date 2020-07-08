@@ -12,8 +12,6 @@ public:
 	~CBlock();
 
 public:
-	virtual void Ready(void);
-	virtual int Update(void); // 벽돌을 뒤로 옮긴다.
 	virtual void LateUpdate(void);
 	virtual void Render(const HDC& _hdc);
 	virtual void Release(void) {};
