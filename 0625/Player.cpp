@@ -52,7 +52,7 @@ int CPlayer::Update(void)
 	{
 		const float delta = GetGameWorld().GetTimer()->GetElapsedTimePerFrame();
 		//TODO: 나중에 실제 델타 값을 넣을 수 있어야 함.
-		IPlayerState* nextState = m_pMoveState->Update(this, delta);
+		IPlayeMoveState* nextState = m_pMoveState->Update(this, delta);
 		if (nextState != m_pMoveState)
 		{
 			assert(nextState != nullptr);
@@ -86,8 +86,6 @@ void CPlayer::Render(const HDC & _hdc)
 {
 	CObj::Render(_hdc);
 	//임시 땜빵 나중에 지워야 함.
-
-
 }
 
 void CPlayer::Release(void)

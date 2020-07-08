@@ -28,7 +28,7 @@ public:
 
 	void SetBlockUnderPlayer(CBlock* _pBlock);
 	CBlock* GetBlockUnderPlayer(void) const;
-
+	const vector<const CObj*>& GetObstacles() const {return (vector<const CObj*>&)m_vecObstacles;}
 private:
 	CGameWorld& m_rGameWorld;		// Block에 전달한 GameWorld 참조자 변수
 	float m_fMapX;					// Map의 전체적인 X좌표 // Y 좌표는 고정

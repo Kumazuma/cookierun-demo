@@ -1,7 +1,7 @@
 #pragma once
 #include "CObj.h"
 class CGunBarrel;
-struct IPlayerState;
+struct IPlayeMoveState;
 
 class CPlayer final : public CObj
 {
@@ -26,7 +26,7 @@ public:
 	int GetScore() const { return m_nScore; }
 	void UseItem(const CObj* const pItem);
 private:
-	IPlayerState* m_pMoveState;
+	IPlayeMoveState* m_pMoveState;
 	HP m_hp;
 	int m_nScore;
 };
