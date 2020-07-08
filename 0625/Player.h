@@ -8,7 +8,7 @@ class CPlayer final : public CObj
 public:
 	using HP = int;
 	constexpr static HP MAX_HP = static_cast<HP>(10000000);
-	constexpr static HP DECREASE_POINT_PER_SECOND = static_cast<HP>(1000);
+	constexpr static HP DECREASE_POINT_PER_SECOND = static_cast<HP>(10000);
 public:
 	CPlayer(CGameWorld& _rGameWorld);
 	CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth = ciPlayerSize, size_t _iHeight = ciPlayerSize, float _fSpeed = cfPlayerSpeed);

@@ -65,9 +65,11 @@ int CPlayer::Update(void)
 		static size_t len = 0;
 		swprintf_s(tmp, L"%f", m_hp * 100.f / CPlayer::MAX_HP);
 		SetWindowTextW(g_hWND, tmp);
-		if (m_hp < 0)
+		
+		if (m_hp < 0 || WINCY < GetY())
 		{
-			
+			SetWindowTextW(g_hWND, L"Game Over!");
+			//SetValid(false);
 			//TODO: »ç¸ÁÃ³¸®
 			//app.GameOver();
 		}
