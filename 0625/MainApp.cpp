@@ -37,7 +37,7 @@ void CMainApp::Ready(void)
 	m_items.push_back(CItem::CreateItem<Item::CCoin>(*this, 300, 100));
 	m_items.push_back(CItem::CreateItem<Item::CLife>(*this, 400, 100));
 	m_items.push_back(CItem::CreateItem<Item::CLife>(*this, 500, 100));
-	m_pViewSpace = new CSpace(*this, WINCX >> 1, WINCY >> 1, static_cast<int>(WINCX / 1.2f), static_cast<int>(WINCY / 1.2f), nullptr);
+	m_pViewSpace = new CSpace(*this, WINCX >> 1, WINCY >> 1, WINCX, WINCY, nullptr);
 
 	m_pMap = new CMap(*this, "../MapDatas/Map1.txt");
 }

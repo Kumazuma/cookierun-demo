@@ -11,7 +11,8 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 	m_fFirstBlockX(0.f),			// 첫 번째 블록의 X좌표 (기준이 되는 Block이다.)
 	m_fFirstBlockY(WINCY >> 1),		// 첫 번재 블록의 Y좌표 (기준이 되는 Block이다.)
 	m_iBlockWidth(100.f),			// Block의 너비
-	m_iBlockHeight(100.f)			// Block의 높이
+	m_iBlockHeight(100.f),			// Block의 높이
+	m_pBlockUnderPlayer(nullptr)
 {
 	FILE* fpIn;
 	errno_t err = 0;
@@ -25,7 +26,9 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 			&m_fFirstBlockY,
 			&m_iBlockWidth,
 			&m_iBlockHeight);
+
 		
+
 		CObj* pBlock = nullptr;
 		int iHeightIndex = 0;
 		int iBlockNum = 0;
@@ -37,11 +40,13 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 				continue;
 			}
 			for (int i = 0; i < iBlockNum; i++) {
-				pBlock = new CBlock(_rGameWorld, *this, fCurrentX, m_fFirstBlockY + m_iBlockHeight * iHeightIndex, m_iBlockWidth, m_iBlockHeight);
+				pBlock = new CBlock(_rGameWorld, *this, fCurrentX, m_fFirstBlockY - m_iBlockHeight * iHeightIndex, m_iBlockWidth, m_iBlockHeight);
 				m_vecBlocks.emplace_back(pBlock);
 				fCurrentX += m_iBlockWidth;
 			}
 		}
+		m_fKillX = m_fFirstBlockX - m_iBlockWidth;
+		m_fRespawnX = m_vecBlocks.back()->GetX();
 	}
 	else abort();
 }
@@ -52,13 +57,14 @@ CMap::~CMap()
 
 void CMap::Update(void)
 {
-	// TODO : 여기서 MapX를 변경한다.
 	m_fMapX += m_fMapSpeed;
+	if (m_fMapX >= GetMapDistance()) m_fMapX -= GetMapDistance();
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->Update(); } }
 }
 
 void CMap::LateUpdate(void)
 {
+	m_pBlockUnderPlayer = nullptr;	// 기존 플레이어 아래에 있던 블록은 플레이어 아래에 있지 않을 수 있으므로 재갱신을 위해 nullptr로 설정.
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->LateUpdate(); } }
 }
 
@@ -73,4 +79,37 @@ void CMap::Render(const HDC& _hdc)
 
 void CMap::Release(void)
 {
+}
+
+float CMap::GetConvX(float _fX) const
+{
+	if (_fX - m_fMapX < GetKillX()) {
+		return GetRespawnX() + (_fX - m_fMapX - GetKillX());
+	}
+	return _fX - m_fMapX;
+}
+
+float CMap::GetConvLeft(float _fX) const
+{
+	return GetConvX(_fX) - (m_iBlockWidth >> 1);
+}
+
+float CMap::GetConvRight(float _fX) const
+{
+	return GetConvX(_fX) + (m_iBlockWidth >> 1);
+}
+
+CBlock * CMap::GetBlockUnderPlayer(void) const
+{
+	return m_pBlockUnderPlayer;
+}
+
+void CMap::SetBlockUnderPlayer(CBlock * _pBlock)
+{
+	if (m_pBlockUnderPlayer) {
+		// 블록이 있다면 가장 최상단 블록으로 세팅한다.
+		if (_pBlock->GetY() < m_pBlockUnderPlayer->GetY())
+			m_pBlockUnderPlayer = _pBlock;
+	}
+	m_pBlockUnderPlayer = _pBlock;
 }
