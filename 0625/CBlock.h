@@ -20,6 +20,7 @@ public:
 
 public:
 	bool IsBlockInView(void);
+	RECT GetConvRect(void) const;
 
 private:
 	CMap& m_rMap;
