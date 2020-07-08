@@ -20,6 +20,7 @@ void CMapObj::LateUpdate(void)
 {
 	CObj* pPlayer = TO_GAMEWORLD(GetGameWorld()).GetPlayer();
 	DO_IF_IS_VALID_OBJ(pPlayer) {
+		// 재순회시 아이템 재생성
 		if (!IsValid() && pPlayer->GetRight() < GetConvLeft()) {
 			SetValid(true);
 		}
