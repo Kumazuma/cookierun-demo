@@ -37,7 +37,10 @@ private:
 	float m_fFirstBlockY;			// 첫 번재 블록의 Y좌표 (기준이 되는 Block이다.)
 	size_t m_iBlockWidth;			// Block의 너비
 	size_t m_iBlockHeight;			// Block의 높이
+
+	vector<CObj*> m_vecItems;		// 아이템들
 	vector<CObj*> m_vecBlocks;		// Block들
+	vector<CObj*> m_vecObstacles;	// 장애물들
 
 	CBlock* m_pBlockUnderPlayer;
 };

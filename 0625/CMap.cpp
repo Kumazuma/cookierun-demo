@@ -2,6 +2,8 @@
 #include "CMap.h"
 #include "CBlock.h"
 #include "MainApp.h"
+#include "CGameWorld.h"
+#include "item.h"
 
 CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 	:
@@ -30,18 +32,68 @@ CMap::CMap(CGameWorld & _rGameWorld, const char * _szDataDirectory)
 		
 
 		CObj* pBlock = nullptr;
+		CObj* pObject = nullptr;	// 블록 위에 생성할 오브젝트
 		int iHeightIndex = 0;
 		int iBlockNum = 0;
+		int bIsObjectsOnBlock = false;
+		int iObjectsHeightIndex = 0;
+		int eObjectType = OBJ::TYPE_END;
 		float fCurrentX = m_fFirstBlockX;
+		vector<_object_generation_info> vecObjGenInfos;
+		_object_generation_info sObjGenInfos;
+		vecObjGenInfos.reserve(20);
 		while (!feof(fpIn)) {
-			fscanf_s(fpIn, "%d %d", &iHeightIndex, &iBlockNum);
+			fscanf_s(fpIn, "%d %d %d", &iHeightIndex, &iBlockNum, &bIsObjectsOnBlock);
+
+			vecObjGenInfos.clear();
+
+			// 블록 위에 오브젝트가 존재한다면 오브젝트 생성 정보를 만들어 저장해둔다.
+			if (bIsObjectsOnBlock == 1) {
+				fscanf_s(fpIn, "%d", &iObjectsHeightIndex);
+				iObjectsHeightIndex = 1;
+				while (true) {
+					fscanf_s(fpIn, "%d", &eObjectType);
+					if (eObjectType == -2) break;
+					if (eObjectType == -1) {
+						// -1은 해당 칸을 건너뛰는 것을 의미한다.
+						iObjectsHeightIndex++;
+						continue;
+					}
+					// 아이템의 타입과 높이를 저장한다.
+					// X값은 아래 블록 생성 시 블록의 X에 종속된다.
+					sObjGenInfos.eType = static_cast<OBJ::E_TYPE>(eObjectType);
+					sObjGenInfos.fHeight = iObjectsHeightIndex * m_iBlockHeight;
+					vecObjGenInfos.emplace_back(sObjGenInfos);
+					iObjectsHeightIndex++;
+				}
+			}
+
 			if (iHeightIndex == -1) {
+				// iHeightIndex가 == -1이라면 스킵한다.
 				for (int i = 0; i < iBlockNum; i++) fCurrentX += m_iBlockWidth;
 				continue;
 			}
 			for (int i = 0; i < iBlockNum; i++) {
+				// 블록을 생성한다.
 				pBlock = new CBlock(_rGameWorld, *this, fCurrentX, m_fFirstBlockY - m_iBlockHeight * iHeightIndex, m_iBlockWidth, m_iBlockHeight);
 				m_vecBlocks.emplace_back(pBlock);
+
+				// 아이템을 생성한다.
+				if (!vecObjGenInfos.empty()) {
+					for (auto& rObjGenInfo : vecObjGenInfos) {
+						switch (rObjGenInfo.eType) {
+						case OBJ::TYPE_OBSTACLE:
+							break;
+						case OBJ::TYPE_COIN:
+							m_vecItems.emplace_back(CItem::CreateItem<Item::CCoin>(m_rGameWorld, fCurrentX, rObjGenInfo.fHeight));
+							break;
+						case OBJ::TYPE_HEALTH:
+							m_vecItems.emplace_back(CItem::CreateItem<Item::CLife>(m_rGameWorld, fCurrentX, rObjGenInfo.fHeight));
+							break;
+						}
+					}
+				}
+				
 				fCurrentX += m_iBlockWidth;
 			}
 		}
@@ -60,21 +112,20 @@ void CMap::Update(void)
 	m_fMapX += m_fMapSpeed;
 	if (m_fMapX >= GetMapDistance()) m_fMapX -= GetMapDistance();
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->Update(); } }
+	for (auto& pItem : m_vecItems) { DO_IF_IS_VALID_OBJ(pItem) { pItem->Update(); } }
 }
 
 void CMap::LateUpdate(void)
 {
 	m_pBlockUnderPlayer = nullptr;	// 기존 플레이어 아래에 있던 블록은 플레이어 아래에 있지 않을 수 있으므로 재갱신을 위해 nullptr로 설정.
 	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->LateUpdate(); } }
+	for (auto& pItem : m_vecItems) { DO_IF_IS_VALID_OBJ(pItem) { pItem->LateUpdate(); } }
 }
 
 void CMap::Render(const HDC& _hdc)
 {
-	for (auto& pBlock : m_vecBlocks) {
-		DO_IF_IS_VALID_OBJ(pBlock) {
-			pBlock->Render(_hdc);
-		}
-	}
+	for (auto& pBlock : m_vecBlocks) { DO_IF_IS_VALID_OBJ(pBlock) { pBlock->Render(_hdc); } }
+	for (auto& pItem : m_vecItems) { DO_IF_IS_VALID_OBJ(pItem) { pItem->Render(_hdc); } }
 }
 
 void CMap::Release(void)

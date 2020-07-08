@@ -11,6 +11,13 @@ public:
 	void LateUpdate(void) override;
 	CItem::Type GetType()const { return m_itemType; }
 	virtual void Effect(CPlayer* const) = 0;
+
+public:
+	bool IsBlockInView(void);
+	RECT GetConvRect(void) const;
+	float GetConvLeft(void) const;
+	float GetConvRight(void) const;
+
 protected:
 	CItem(CGameWorld& world, float fX, float fY, CItem::Type type = Type::NONE);
 	Type m_itemType;

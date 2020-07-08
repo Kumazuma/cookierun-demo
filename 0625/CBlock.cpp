@@ -61,8 +61,6 @@ void CBlock::LateUpdate(void)
 
 void CBlock::Render(const HDC & _hdc)
 {
-	RECT rectViewSpace = TO_GAMEWORLD(GetGameWorld()).GetViewSpace()->GetRect();
-
 	if (IsBlockInView()) {
 		Rectangle(_hdc, m_rMap.GetConvX(GetX()) - (GetWidth() >> 1) , GetTop(), m_rMap.GetConvX(GetX()) + (GetWidth() >> 1), GetBottom());
 	}
@@ -78,9 +76,9 @@ bool CBlock::IsBlockInView(void)
 RECT CBlock::GetConvRect(void) const
 {
 	RECT rc = {
-		m_rMap.GetConvLeft(GetX()),
+		GetConvLeft(),
 		GetTop(),
-		m_rMap.GetConvRight(GetX()),
+		GetConvRight(),
 		GetBottom()
 	};
 	return rc;

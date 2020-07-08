@@ -53,6 +53,30 @@ int CItem::Update(void)
 	}
 	return 0;
 }
+bool CItem::IsBlockInView(void)
+{
+	RECT rectViewSpace = TO_GAMEWORLD(GetGameWorld()).GetViewSpace()->GetRect();
+
+	return IsCollided(GetConvRect(), rectViewSpace);
+}
+RECT CItem::GetConvRect(void) const
+{
+	RECT rc = {
+		GetConvLeft(),
+		GetTop(),
+		GetConvRight(),
+		GetBottom()
+	};
+	return rc;
+}
+float CItem::GetConvLeft(void) const
+{
+	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvLeft(GetX());
+}
+float CItem::GetConvRight(void) const
+{
+	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvRight(GetX());
+}
 void CItem::LateUpdate(void)
 {
 	auto& app = (CMainApp&) GetGameWorld();
@@ -85,20 +109,22 @@ Item::CCoin::CCoin(CGameWorld& world, float fX, float fY) :
 }
 void Item::CCoin::Render(const HDC& hDC)
 {
-	HBRUSH hYellowBrush = CreateSolidBrush(RGB(255, 255, 128));
-	HBRUSH hPrevBrush =(HBRUSH) SelectObject(hDC, hYellowBrush);
-	auto& app = (CMainApp&)GetGameWorld();
-	auto pMap = app.GetMap();
+	if (IsBlockInView()) {
+		auto& app = (CMainApp&)GetGameWorld();
+		auto pMap = app.GetMap();
+		HBRUSH hYellowBrush = CreateSolidBrush(RGB(255, 255, 128));
+		HBRUSH hPrevBrush = (HBRUSH)SelectObject(hDC, hYellowBrush);
+		Ellipse(hDC,
+			static_cast<int>(pMap->GetConvX(m_fX) - m_realScale * ItemMaxSize / 2.f),
+			static_cast<int>(m_fY - ItemMaxSize / 2.f),
+			static_cast<int>(pMap->GetConvX(m_fX) + m_realScale * ItemMaxSize / 2.f),
+			static_cast<int>(m_fY + ItemMaxSize / 2.f)
+		);
+		SelectObject(hDC, hPrevBrush);
+		DeleteObject(hYellowBrush);
 
-	Ellipse(hDC,
-		static_cast<int>(pMap->GetConvX(m_fX) - m_realScale * ItemMaxSize / 2.f),
-		static_cast<int>(m_fY - ItemMaxSize / 2.f),
-		static_cast<int>(pMap->GetConvX(m_fX) + m_realScale * ItemMaxSize / 2.f),
-		static_cast<int>(m_fY + ItemMaxSize / 2.f)
-	);
-
-	SelectObject(hDC, hPrevBrush);
-	DeleteObject(hYellowBrush);
+		
+	}
 }
 
 
