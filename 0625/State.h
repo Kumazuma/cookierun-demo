@@ -85,7 +85,7 @@ namespace State
 	class BumpState : public IPlayerCollisionState
 	{
 	public:
-		constexpr static float Interval = 1.f;
+		constexpr static float Interval = 1.2f;
 		void OnLoaded(CPlayer* const pObject)override;
 		IPlayerCollisionState* Update(CPlayer* const, float timedelta)override;
 		IPlayerCollisionState* PostUpdate(CPlayer* const) override { return this; };

@@ -18,7 +18,8 @@ CPlayer::CPlayer(CGameWorld& _rGameWorld)
 	:
 	CObj(_rGameWorld, 0, 0, ciPlayerWidth, ciPlayerHeight, cfPlayerSpeed, Rectangle),
 	m_hp{MAX_HP},
-	m_pHpGauge(nullptr)
+	m_pHpGauge(nullptr),
+	m_bIsImmortal{false}
 	//m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 10.f, m_fHp, m_fHp, 0.f, -((m_iHeight >> 1) + 10.f)))
 	
 {
@@ -29,7 +30,8 @@ CPlayer::CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth /
 	:
 	CObj(_rGameWorld, _fX, _fY, _iWidth, _iHeight, _fSpeed, Rectangle),
 	m_hp{ MAX_HP },
-	m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 20.f, MAX_HP, m_hp, 0.f, -((m_iHeight >> 1) + 10.f)))
+	m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 20.f, MAX_HP, m_hp, 0.f, -((m_iHeight >> 1) + 10.f))),
+	m_bIsImmortal{ false }
 {
 	m_pHpGauge->AdjustPositionToOwner(false);
 	m_pHpGauge->SetX(600.f);

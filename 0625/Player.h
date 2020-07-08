@@ -26,7 +26,7 @@ public:
 	void HealHP(HP hp);
 	void AddScore(int score) { m_nScore += score; }
 	int GetScore() const { return m_nScore; }
-	bool IsImmortal(void) const { return m_bIsImmortal; }
+	bool IsImmortal(void) const override { return m_bIsImmortal; }
 	void SetImmortal(bool value) { m_bIsImmortal = value; }
 private:
 	bool m_bIsImmortal;

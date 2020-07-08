@@ -182,6 +182,9 @@ IPlayeMoveState* State::Move::Slide::Update(CObj* const pObject, float fTimedelt
 void State::BumpState::OnLoaded(CPlayer* const pObject)
 {
     pObject->SetImmortal(true);
+    auto& app = (CMainApp&)pObject->GetGameWorld();
+    auto* pMap = app.GetMap();
+    pMap->SlowMap(BumpState::Interval);
 }
 
 IPlayerCollisionState* State::BumpState::Update(CPlayer* const pObject, float timedelta)

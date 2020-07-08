@@ -15,7 +15,7 @@ public:
 	virtual void LateUpdate(void) {};
 	virtual void Render(const HDC& _hdc) { if(m_pDrawFunc) m_pDrawFunc(_hdc, GetLeft(), GetTop(), GetRight(), GetBottom()); };
 	virtual void Release(void) {};
-
+	virtual bool IsImmortal() const { return false; }
 public:
 	CGameWorld& GetGameWorld(void) const { return m_rGameWorld; }
 
