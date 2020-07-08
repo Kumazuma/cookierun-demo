@@ -2,6 +2,8 @@
 #include "State.h"
 #include "Define.h"
 #include "CObj.h"
+#include "MainApp.h"
+#include "CMap.h"
 constexpr float GROUND_HEIGHT = static_cast<float>(static_cast<int>(WINCY / 1.2f));
 constexpr float JUMP_SPPED = 600.f;
 void State::Default::OnLoaded(CObj* const pObject)
@@ -51,6 +53,9 @@ void State::Jump::GravityMove(CObj* const pObject, float fTimedelta)
 bool State::Jump::IsReturn(CObj* const pObject)
 {
     float fY = pObject->GetY();
+    auto& mainApp = (CMainApp&)pObject->GetGameWorld();
+    CMap* pMap = mainApp.GetMap();
+    
     if (fY >= GROUND_HEIGHT - 100 && pObject->GetSpeed() <= 0.f)
     {
         pObject->SetY(GROUND_HEIGHT);
