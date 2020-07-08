@@ -8,13 +8,18 @@ public:
 	~CUI_Gauge();
 
 public:
-	void SetCurrentGauge(float _fCurrent);
 	virtual int Update(void);
 	virtual void Render(const HDC& _hdc);
 	virtual void Release(void) { m_pOwner = nullptr; }
 
+public:
+	void SetCurrentGauge(float _fCurrent);
+	void AdjustPositionToOwner(bool _bIsDependent) { m_bIsDependent = _bIsDependent; }
+	void SetMaxWidth(size_t _iMaxWidth) { m_iMaxWidth = _iMaxWidth; }
+	void SetMaxHeight(size_t _iMaxHeight) { m_iMaxHeight = _iMaxHeight; }
 private:
 	CObj* m_pOwner;
+	bool m_bIsDependent;
 	RECT m_rcGauge;
 	float m_fOffsetX;
 	float m_fOffsetY;

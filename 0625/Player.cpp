@@ -13,10 +13,13 @@
 #include "CMap.h"
 #include "CBlock.h"
 #include "item.h"
+#include "UI_Gauge.h"
 CPlayer::CPlayer(CGameWorld& _rGameWorld)
 	:
 	CObj(_rGameWorld, 0, 0, ciPlayerWidth, ciPlayerHeight, cfPlayerSpeed, Rectangle),
-	m_hp{MAX_HP}
+	m_hp{MAX_HP},
+	m_pHpGauge(nullptr)
+	//m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 10.f, m_fHp, m_fHp, 0.f, -((m_iHeight >> 1) + 10.f)))
 	
 {
 
@@ -25,9 +28,14 @@ CPlayer::CPlayer(CGameWorld& _rGameWorld)
 CPlayer::CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth /*= ciPlayerSize*/, size_t _iHeight /*= ciPlayerSize*/, float _fSpeed /*= cfPlayerSpeed*/)
 	:
 	CObj(_rGameWorld, _fX, _fY, _iWidth, _iHeight, _fSpeed, Rectangle),
-	m_hp{ MAX_HP }
+	m_hp{ MAX_HP },
+	m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 20.f, m_hp, m_hp, 0.f, -((m_iHeight >> 1) + 10.f)))
 {
-
+	m_pHpGauge->AdjustPositionToOwner(false);
+	m_pHpGauge->SetX(600.f);
+	m_pHpGauge->SetY(35.f);
+	m_pHpGauge->SetMaxWidth(WINCX >> 1);
+	m_pHpGauge->SetWidth(WINCX >> 1);
 }
 
 
@@ -61,6 +69,7 @@ int CPlayer::Update(void)
 			m_pMoveState->OnLoaded(this);
 		}
 		m_hp -= delta * DECREASE_POINT_PER_SECOND;
+		m_pHpGauge->SetCurrentGauge(m_hp);
 		static wchar_t tmp[1024]{};
 		static size_t len = 0;
 		swprintf_s(tmp, L"%f", m_hp * 100.f / CPlayer::MAX_HP);
@@ -74,6 +83,9 @@ int CPlayer::Update(void)
 			GetGameWorld().GameOver();
 		}
 	}
+
+	DO_IF_IS_VALID_OBJ(m_pHpGauge) { m_pHpGauge->Update(); }
+
 	return 0;
 }
 
@@ -87,11 +99,12 @@ void CPlayer::Render(const HDC & _hdc)
 	CObj::Render(_hdc);
 	//임시 땜빵 나중에 지워야 함.
 
-
+	DO_IF_IS_VALID_OBJ(m_pHpGauge) { m_pHpGauge->Render(_hdc); }
 }
 
 void CPlayer::Release(void)
 {
+	DeleteSafe(m_pHpGauge);
 }
 
 void CPlayer::UseItem(const CObj* const pItem)
