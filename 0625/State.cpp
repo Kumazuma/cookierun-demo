@@ -6,7 +6,8 @@
 #include "CMap.h"
 #include "CBlock.h"
 constexpr float GROUND_HEIGHT = static_cast<float>(static_cast<int>(WINCY / 1.5f));
-constexpr float JUMP_SPPED = 600.f;
+constexpr float JUMP_SPPED = 500.f;
+constexpr float GRAVITY_ACCELATION = -600.f;
 void State::Default::OnLoaded(CObj* const pObject)
 {
    
@@ -52,7 +53,7 @@ State::Gravity::Gravity():
 
 void State::Gravity::GravityMove(CObj* const pObject, float fTimedelta)
 {
-    m_fSpeed += -500.0f * fTimedelta;
+    m_fSpeed += GRAVITY_ACCELATION * fTimedelta;
 }
 
 bool State::Gravity::IsReturn(CObj* const pObject)

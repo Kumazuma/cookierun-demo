@@ -22,12 +22,14 @@ public:
 	const CObj* GetViewSpace(void) const { return m_pViewSpace; }
 	list<CObj*>& GetItems(void) { return m_items; }
 	CMap* GetMap(void) { return m_pMap; }
-
+	void OnResize();
 private:
 	inline void ClearWindow(void);
 
 private:
-	HDC m_hDC;
+	HDC m_hWindowDC;
+	HBITMAP m_hBackbuffer;
+	HDC m_hBackbufferDC;
 	CObj* m_pPlayer; 
 	CObj* m_pViewSpace;
 	list<CObj*> m_items;
