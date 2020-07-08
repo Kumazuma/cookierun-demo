@@ -114,7 +114,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-	TCHAR szTitle[64] = _T("총알상자2");
+	TCHAR szTitle[64] = _T("렉트런");
 	RECT rc = { 0, 0, WINCX, WINCY };
 	constexpr auto WS = WS_SYSMENU | WS_MINIMIZEBOX | WS_CAPTION;
 	AdjustWindowRect(&rc, WS, false);
