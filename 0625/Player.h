@@ -2,13 +2,14 @@
 #include "CObj.h"
 class CGunBarrel;
 struct IPlayeMoveState;
+class CUI_Gauge;
 
 class CPlayer final : public CObj
 {
 public:
 	using HP = int;
 	constexpr static HP MAX_HP = static_cast<HP>(1000);
-	constexpr static HP DECREASE_POINT_PER_SECOND = static_cast<HP>(100);
+	constexpr static HP DECREASE_POINT_PER_SECOND = static_cast<HP>(50);
 public:
 	CPlayer(CGameWorld& _rGameWorld);
 	CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth = ciPlayerWidth, size_t _iHeight = ciPlayerHeight, float _fSpeed = cfPlayerSpeed);
@@ -28,6 +29,7 @@ public:
 private:
 	IPlayeMoveState* m_pMoveState;
 	HP m_hp;
+	CUI_Gauge* m_pHpGauge;
 	int m_nScore;
 };
 

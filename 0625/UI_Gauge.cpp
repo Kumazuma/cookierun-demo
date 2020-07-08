@@ -6,6 +6,7 @@ CUI_Gauge::CUI_Gauge(CGameWorld& _rGameWorld, CObj* _pOwner, size_t _iMaxWidth, 
 	:
 	m_pOwner(nullptr),
 	CObj(_rGameWorld, 0.f, 0.f, _iMaxWidth, _iMaxHeight),
+	m_bIsDependent(true),
 	m_fMax(_fMax),
 	m_fCurrent(_fCurrent),
 	m_fOffsetX(_fOffsetX),
@@ -46,7 +47,7 @@ void CUI_Gauge::SetCurrentGauge(float _fCurrent)
 
 int CUI_Gauge::Update(void)
 {
-	if (m_pOwner) {
+	if (m_bIsDependent && m_pOwner) {
 		SetX(m_pOwner->GetX() + m_fOffsetX);
 		SetY(m_pOwner->GetY() + m_fOffsetY);
 	}
