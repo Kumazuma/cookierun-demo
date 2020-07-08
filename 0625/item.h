@@ -9,6 +9,13 @@ public:
 	static CObj* CreateItem(CGameWorld& world, float fX, float fY);
 	int Update(void) override;
 	CItem::Type GetType()const { return m_itemType; }
+
+public:
+	bool IsBlockInView(void);
+	RECT GetConvRect(void) const;
+	float GetConvLeft(void) const;
+	float GetConvRight(void) const;
+
 protected:
 	CItem(CGameWorld& world, float fX, float fY, CItem::Type type = Type::NONE);
 	Type m_itemType;

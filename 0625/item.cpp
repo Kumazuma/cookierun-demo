@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "item.h"
 #include "CGameWorld.h"
+#include "MainApp.h"
+#include "CMap.h"
 constexpr float ItemMaxSize = 40.f;
 
 CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
@@ -49,6 +51,30 @@ int CItem::Update(void)
 	}
 	return 0;
 }
+bool CItem::IsBlockInView(void)
+{
+	RECT rectViewSpace = TO_GAMEWORLD(GetGameWorld()).GetViewSpace()->GetRect();
+
+	return IsCollided(GetConvRect(), rectViewSpace);
+}
+RECT CItem::GetConvRect(void) const
+{
+	RECT rc = {
+		GetConvLeft(),
+		GetTop(),
+		GetConvRight(),
+		GetBottom()
+	};
+	return rc;
+}
+float CItem::GetConvLeft(void) const
+{
+	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvLeft(GetX());
+}
+float CItem::GetConvRight(void) const
+{
+	return TO_GAMEWORLD(GetGameWorld()).GetMap()->GetConvRight(GetX());
+}
 Item::CCoin::CCoin(CGameWorld& world, float fX, float fY) :
 	CItem{ world, fX, fY , CItem::Type::COIN }
 {
@@ -56,17 +82,19 @@ Item::CCoin::CCoin(CGameWorld& world, float fX, float fY) :
 }
 void Item::CCoin::Render(const HDC& hDC)
 {
-	HBRUSH hYellowBrush = CreateSolidBrush(RGB(255, 255, 128));
-	HBRUSH hPrevBrush =(HBRUSH) SelectObject(hDC, hYellowBrush);
-	Ellipse(hDC,
-		static_cast<int>(m_fX - m_realScale * ItemMaxSize / 2.f),
-		static_cast<int>(m_fY - ItemMaxSize / 2.f),
-		static_cast<int>(m_fX + m_realScale * ItemMaxSize / 2.f),
-		static_cast<int>(m_fY + ItemMaxSize / 2.f)
-	);
+	if (IsBlockInView()) {
+		HBRUSH hYellowBrush = CreateSolidBrush(RGB(255, 255, 128));
+		HBRUSH hPrevBrush = (HBRUSH)SelectObject(hDC, hYellowBrush);
+		Ellipse(hDC,
+			static_cast<int>( - m_realScale * ItemMaxSize / 2.f),
+			static_cast<int>(m_fY - ItemMaxSize / 2.f),
+			static_cast<int>(m_fX + m_realScale * ItemMaxSize / 2.f),
+			static_cast<int>(m_fY + ItemMaxSize / 2.f)
+		);
 
-	SelectObject(hDC, hPrevBrush);
-	DeleteObject(hYellowBrush);
+		SelectObject(hDC, hPrevBrush);
+		DeleteObject(hYellowBrush);
+	}
 }
 
 
