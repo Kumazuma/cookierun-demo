@@ -43,15 +43,20 @@ int CItem::Update(void)
 	{
 		m_sign = -1;
 	}
-	if (m_realScale > 1.f)
-	{
-		m_realScale = 1.f;
-	}
-	else if (m_realScale < -1.f)
-	{
-		m_realScale = -1.f;
-	}
+	m_realScale = Clamp(m_realScale, -1.f, 1.f);
 	return 0;
+}
+
+void CItem::LateUpdate()
+{
+	auto pPlayer = ((CMainApp&)GetGameWorld()).GetPlayer();
+	if (!IsValid() && pPlayer->GetRight() < GetConvLeft()) {
+		SetValid(true);
+	}
+	if (IsCollided(pPlayer->GetRect(), GetConvRect())) {
+		Effect((CPlayer*)pPlayer);
+		SetValid(false);
+	}
 }
 
 Item::CCoin::CCoin(CGameWorld& world, CMap& _rMap, float fX, float fY) :
@@ -101,7 +106,7 @@ Item::CLife::~CLife()
 void Item::CLife::Effect(CPlayer* const pPlayer)
 {
 	//10초를 지속시켜 준다.
-	pPlayer->AddScore(CPlayer::DECREASE_POINT_PER_SECOND * 10);
+	pPlayer->HealHP(CPlayer::DECREASE_POINT_PER_SECOND );
 }
 
 void Item::CLife::Render(const HDC& hDC)

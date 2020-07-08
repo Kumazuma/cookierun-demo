@@ -6,6 +6,7 @@
 #include "CMap.h"
 #include "CBlock.h"
 #include "Player.h"
+#include "UI_Gauge.h"
 constexpr float JUMP_SPPED = 600.f;
 constexpr float GRAVITY_ACCELATION = -800.f;
 void State::Move::Default::OnLoaded(CObj* const pObject)
@@ -178,27 +179,39 @@ IPlayeMoveState* State::Move::Slide::Update(CObj* const pObject, float fTimedelt
     return this;
 }
 
-IPlayerCollisionState* State::BumpState::Update(CObj* const, float timedelta)
+void State::BumpState::OnLoaded(CPlayer* const pObject)
+{
+    pObject->SetImmortal(true);
+}
+
+IPlayerCollisionState* State::BumpState::Update(CPlayer* const pObject, float timedelta)
 {
     m_fTime -= timedelta;
     if (m_fTime <= 0.f)
     {
+        pObject->SetImmortal(false);
         return new NormalState{};
     }
     return this;
 }
 
-void State::BumpState::Render(CObj* const pObject, HDC hDC)
+void State::BumpState::Render(CPlayer* const pObject, HDC hDC)
 {
     if (m_bTicToc)
     {
         RECT rc{ pObject->GetRect() };
         Rectangle(hDC, rc.left, rc.top, rc.right, rc.bottom);
     }
+    pObject->GetGauge()->Render(hDC);
     m_bTicToc = !m_bTicToc;
 }
 
-IPlayerCollisionState* State::NormalState::PostUpdate(CObj* const pObject)
+void State::NormalState::OnLoaded(CPlayer* const pObject)
+{
+    pObject->SetImmortal(false);
+}
+
+IPlayerCollisionState* State::NormalState::PostUpdate(CPlayer* const pObject)
 {
     auto& app = (CMainApp&)pObject->GetGameWorld();
     auto* map = app.GetMap();
@@ -225,15 +238,17 @@ IPlayerCollisionState* State::NormalState::PostUpdate(CObj* const pObject)
         {
             continue;
         }
-        //충돌이 일어났음.
-        auto pPlayer = (CPlayer*)pObject;
-        
+
+        //충돌이 일어났음. 2초 동안 줄어드는 포인트만큼 줄여 버린다.
+        pObject->HealHP(CPlayer::DECREASE_POINT_PER_SECOND * -1);
+        return new BumpState{};
     }
     return this;
 }
 
-void State::NormalState::Render(CObj* const pObject, HDC hDC)
+void State::NormalState::Render(CPlayer* const pObject, HDC hDC)
 {
     RECT rc{ pObject->GetRect() };
     Rectangle(hDC, rc.left, rc.top, rc.right, rc.bottom);
+    pObject->GetGauge()->Render(hDC);
 }

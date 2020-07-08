@@ -10,7 +10,7 @@ public:
 	CMapObj(CGameWorld& _rGameWorld, CMap& _rMap, float _fX, float _fY, size_t _iWidth, size_t _iHeight);
 	~CMapObj();
 
-	virtual void LateUpdate(void);
+	virtual void LateUpdate(void) = 0;
 
 public:
 	bool IsBlockInView(void);

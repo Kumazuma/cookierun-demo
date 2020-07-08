@@ -29,13 +29,19 @@ CPlayer::CPlayer(CGameWorld& _rGameWorld, float _fX, float _fY, size_t _iWidth /
 	:
 	CObj(_rGameWorld, _fX, _fY, _iWidth, _iHeight, _fSpeed, Rectangle),
 	m_hp{ MAX_HP },
-	m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 20.f, m_hp, m_hp, 0.f, -((m_iHeight >> 1) + 10.f)))
+	m_pHpGauge(new CUI_Gauge(_rGameWorld, this, _iWidth * 2.f, 20.f, MAX_HP, m_hp, 0.f, -((m_iHeight >> 1) + 10.f)))
 {
 	m_pHpGauge->AdjustPositionToOwner(false);
 	m_pHpGauge->SetX(600.f);
 	m_pHpGauge->SetY(35.f);
 	m_pHpGauge->SetMaxWidth(WINCX >> 1);
 	m_pHpGauge->SetWidth(WINCX >> 1);
+
+	m_pCollisionState = new State::NormalState{};
+	m_pMoveState = new State::Move::Default{};
+	
+	m_pMoveState->OnLoaded(this);
+	m_pCollisionState->OnLoaded(this);
 }
 
 
@@ -46,12 +52,17 @@ CPlayer::~CPlayer()
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}
+	if (m_pCollisionState != nullptr)
+	{
+		delete m_pCollisionState;
+		m_pCollisionState = nullptr;
+	}
 }
 
 void CPlayer::Ready(void)
 {
-	m_pMoveState = new State::Move::Default{};
-	m_pMoveState->OnLoaded(this);
+	
+	
 }
 
 int CPlayer::Update(void)
@@ -68,14 +79,23 @@ int CPlayer::Update(void)
 			m_pMoveState = nextState;
 			m_pMoveState->OnLoaded(this);
 		}
+		auto pNextCollisionState = m_pCollisionState->Update(this, delta);
+		if (pNextCollisionState != m_pCollisionState)
+		{
+			assert(pNextCollisionState != nullptr);
+			delete m_pCollisionState;
+			m_pCollisionState = pNextCollisionState;
+			m_pCollisionState->OnLoaded(this);
+		}
+
 		m_hp -= delta * DECREASE_POINT_PER_SECOND;
 		m_pHpGauge->SetCurrentGauge(m_hp);
 		static wchar_t tmp[1024]{};
 		static size_t len = 0;
-		swprintf_s(tmp, L"%f", m_hp * 100.f / CPlayer::MAX_HP);
+		swprintf_s(tmp, L"%d / %d", m_hp , CPlayer::MAX_HP);
 		SetWindowTextW(g_hWND, tmp);
 		
-		if (m_hp < 0 || WINCY < GetY())
+		if (m_hp <= 0 || WINCY < GetY())
 		{
 			SetWindowTextW(g_hWND, L"Game Over!");
 			//SetValid(false);
@@ -91,15 +111,22 @@ int CPlayer::Update(void)
 
 void CPlayer::LateUpdate(void)
 {
-
+	auto pNextCollisionState = m_pCollisionState->PostUpdate(this);
+	if (pNextCollisionState != m_pCollisionState)
+	{
+		assert(pNextCollisionState != nullptr);
+		delete m_pCollisionState;
+		m_pCollisionState = pNextCollisionState;
+		m_pCollisionState->OnLoaded(this);
+	}
 }
 
 void CPlayer::Render(const HDC & _hdc)
 {
-	CObj::Render(_hdc);
-	//임시 땜빵 나중에 지워야 함.
-
-	DO_IF_IS_VALID_OBJ(m_pHpGauge) { m_pHpGauge->Render(_hdc); }
+	if (m_pCollisionState != nullptr)
+	{
+		m_pCollisionState->Render(this, _hdc);
+	}
 }
 
 void CPlayer::Release(void)
@@ -107,8 +134,9 @@ void CPlayer::Release(void)
 	DeleteSafe(m_pHpGauge);
 }
 
-void CPlayer::UseItem(const CObj* const pItem)
+void CPlayer::HealHP(HP hp)
 {
-	auto pCoin = dynamic_cast<const Item::CCoin*>(pItem);
+	m_hp += hp;
+	m_hp  = Clamp(m_hp, 0, MAX_HP);
 }
 

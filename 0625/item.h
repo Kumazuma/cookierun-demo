@@ -9,6 +9,7 @@ public:
 	template<typename _T> 
 	static CObj* CreateItem(CGameWorld& world, CMap& _rMap, float fX, float fY);
 	int Update(void) override;
+	void LateUpdate() override;
 	CItem::Type GetType()const { return m_itemType; }
 	virtual void Effect(CPlayer* const) = 0;
 
