@@ -53,8 +53,8 @@ void CBlock::LateUpdate(void)
 	}
 
 	if (m_rMap.GetConvLeft(GetX()) < pPlayer->GetRight()		// 플레이어 발끝자락이 블록 좌우 내에 있고
-		&& pPlayer->GetRight() < m_rMap.GetConvRight(GetX())
-		&& pPlayer->GetY() < GetY()) {							// 플레이어가 블록보다 위에 있을 경우.
+		&& pPlayer->GetRight() <= m_rMap.GetConvRight(GetX())
+		&& pPlayer->GetY() <= GetY()) {							// 플레이어가 블록보다 위에 있을 경우.
 		m_rMap.SetBlockUnderPlayer(this);
 	}
 }

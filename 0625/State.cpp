@@ -4,14 +4,18 @@
 #include "CObj.h"
 #include "MainApp.h"
 #include "CMap.h"
-constexpr float GROUND_HEIGHT = static_cast<float>(static_cast<int>(WINCY / 1.2f));
+#include "CBlock.h"
+constexpr float GROUND_HEIGHT = static_cast<float>(static_cast<int>(WINCY / 1.5f));
 constexpr float JUMP_SPPED = 600.f;
 void State::Default::OnLoaded(CObj* const pObject)
 {
-    pObject->SetY(GROUND_HEIGHT);
+   
 }
-IPlayerState* State::Default::Update(CObj* const, float fTimedelta)
+IPlayerState* State::Default::Update(CObj* const pObject, float fTimedelta)
 {
+    Gravity::Update(pObject, fTimedelta);
+    Gravity::GravityMove(pObject, fTimedelta);
+
     if (IS_PRESS_KEY_(VK_SPACE))
     {
         return new SingleJump{};
@@ -25,45 +29,54 @@ IPlayerState* State::Default::Update(CObj* const, float fTimedelta)
 
 void State::Jump::OnLoaded(CObj* const pObject)
 {
-    float speed = JUMP_SPPED;
-    pObject->SetSpeed(speed);
+    m_fSpeed = JUMP_SPPED;
 }
 
-IPlayerState* State::Jump::Update(CObj* const pObject, float fTimedelta)
+IPlayerState* State::Gravity::Update(CObj* const pObject, float fTimedelta)
 {
-    float fSpeed = pObject->GetSpeed();
+    auto& mainApp = (CMainApp&)pObject->GetGameWorld();
+    CMap* pMap = mainApp.GetMap();
+    auto* pBlock = pMap->GetBlockUnderPlayer();
     float fY = pObject->GetY();
-    fY -= fSpeed * fTimedelta;
+    fY -= m_fSpeed * fTimedelta;
     pObject->SetY(fY);
+    
     return this;
 }
 
-void State::Jump::GravityMove(CObj* const pObject, float fTimedelta)
+State::Gravity::Gravity():
+    m_fSpeed{0.f}
 {
-    //플레이어의 좌표 Y가 지면보다 낮다면 땅바닥으로 푹 꺼진 것이다.
-    //플레이어의 좌표를 지면과 같은 위치로 맞춰준다.
-    float fSpeed = pObject->GetSpeed();
-    bool bResult = false;
-    float fY = pObject->GetY();
-    fSpeed += -800.0f * fTimedelta;
-    pObject->SetSpeed(fSpeed);
-
+    
 }
 
-bool State::Jump::IsReturn(CObj* const pObject)
+void State::Gravity::GravityMove(CObj* const pObject, float fTimedelta)
+{
+    m_fSpeed += -500.0f * fTimedelta;
+}
+
+bool State::Gravity::IsReturn(CObj* const pObject)
 {
     float fY = pObject->GetY();
+    float fPlayerBottom = fY + pObject->GetHeight() / 2.f;
     auto& mainApp = (CMainApp&)pObject->GetGameWorld();
     CMap* pMap = mainApp.GetMap();
-    
-    if (fY >= GROUND_HEIGHT - 100 && pObject->GetSpeed() <= 0.f)
+    auto* pBlock = pMap->GetBlockUnderPlayer();
+    float fBlockTop = 0;
+    if (pBlock != nullptr)
     {
-        pObject->SetY(GROUND_HEIGHT);
-        return true;
+        fBlockTop = pBlock->GetY() - pBlock->GetHeight() / 2.f;
+        if (fBlockTop <= fPlayerBottom)
+        {
+            m_fSpeed = 0.0f;
+            float fPlayerHeight = pObject->GetHeight();
+            float newY = fBlockTop - fPlayerHeight / 2.f;
+            pObject->SetY(newY);
+            return true;
+        }
     }
     return false;
 }
-
 State::SingleJump::SingleJump():
     m_bReachedTop{ false }
 {
@@ -71,17 +84,17 @@ State::SingleJump::SingleJump():
 }
 IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
 {
-    Jump::Update(pObject, fTimedelta);
-    Jump::GravityMove(pObject, fTimedelta);
+    Gravity::Update(pObject, fTimedelta);
+    Gravity::GravityMove(pObject, fTimedelta);
     if (IsReturn(pObject))
     {
         return new Default{};
     }
-    if (m_bReachedTop == false && pObject->GetSpeed() <= 0.f)
+    if (m_bReachedTop == false && m_fSpeed <= 0.f)
     {
         m_bReachedTop = true;
     }
-    if (m_bReachedTop == false && pObject->GetSpeed() < JUMP_SPPED / 2.f && IS_PRESS_KEY_(VK_SPACE))
+    if (m_bReachedTop == false && m_fSpeed < JUMP_SPPED / 2.f && IS_PRESS_KEY_(VK_SPACE))
     {
         //TODO: double Jump
         return new DoubleJump {};
@@ -92,8 +105,8 @@ IPlayerState* State::SingleJump::Update(CObj* const pObject, float fTimedelta)
 
 IPlayerState* State::DoubleJump::Update(CObj* const pObject, float fTimedelta)
 {
-    Jump::Update(pObject, fTimedelta);
-    Jump::GravityMove(pObject, fTimedelta);
+    Gravity::Update(pObject, fTimedelta);
+    GravityMove(pObject, fTimedelta);
     if (IsReturn(pObject))
     {
         //TODO: Default State

@@ -8,6 +8,8 @@
 #include "MainApp.h"
 #include "State.h"
 #include <assert.h>
+#include "CMap.h"
+#include "CBlock.h"
 CPlayer::CPlayer(CGameWorld& _rGameWorld)
 	:
 	CObj(_rGameWorld, 0, 0, ciPlayerSize, ciPlayerSize, cfPlayerSpeed, Rectangle)
@@ -64,8 +66,12 @@ void CPlayer::LateUpdate(void)
 void CPlayer::Render(const HDC & _hdc)
 {
 	CObj::Render(_hdc);
+	//임시 땜빵 나중에 지워야 함.
+
+
 }
 
 void CPlayer::Release(void)
 {
 }
+

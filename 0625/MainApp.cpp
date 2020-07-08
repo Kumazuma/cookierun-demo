@@ -29,7 +29,7 @@ void CMainApp::Ready(void)
 
 	// 플레이어 생성
 	if (!m_pPlayer) {
-		m_pPlayer = new CPlayer(*this, WINCX >> 1, WINCY >> 1);
+		m_pPlayer = new CPlayer(*this, 20, WINCY >> 1);
 		m_pPlayer->Ready();
 	}
 	m_items.push_back(CItem::CreateItem<Item::CCoin>(*this, 100, 100));
@@ -44,15 +44,15 @@ void CMainApp::Ready(void)
 
 void CMainApp::Update(void)
 {
+	m_pMap->Update();
 	for (auto& pItem : m_items) { pItem->Update(); }
 	m_pPlayer->Update();
-	m_pMap->Update();
 }
 
 void CMainApp::LateUpdate(void)
 {
-	DO_IF_IS_VALID_OBJ(m_pPlayer) { m_pPlayer->LateUpdate(); }
 	m_pMap->LateUpdate();
+	DO_IF_IS_VALID_OBJ(m_pPlayer) { m_pPlayer->LateUpdate(); }
 
 	DO_IF_IS_NOT_VALID_OBJ(m_pPlayer) { DeleteSafe(m_pPlayer); }
 }

@@ -8,7 +8,6 @@ public:
 	template<typename _T> 
 	static CObj* CreateItem(CGameWorld& world, float fX, float fY);
 	int Update(void) override;
-
 	CItem::Type GetType()const { return m_itemType; }
 protected:
 	CItem(CGameWorld& world, float fX, float fY, CItem::Type type = Type::NONE);
