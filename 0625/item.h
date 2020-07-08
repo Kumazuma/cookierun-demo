@@ -1,6 +1,6 @@
 #pragma once
 #include"CObj.h"
-
+class CPlayer;
 class CItem : public CObj
 {
 public:
@@ -9,6 +9,7 @@ public:
 	static CObj* CreateItem(CGameWorld& world, float fX, float fY);
 	int Update(void) override;
 	CItem::Type GetType()const { return m_itemType; }
+	virtual void Effect(CPlayer* const) = 0;
 protected:
 	CItem(CGameWorld& world, float fX, float fY, CItem::Type type = Type::NONE);
 	Type m_itemType;
@@ -22,7 +23,7 @@ namespace Item
 		friend class CItem;
 	public:
 		~CCoin();
-		
+		void Effect(CPlayer* const) override;
 		void Render(const HDC& hDC) override;
 	private:
 		CCoin(CGameWorld& world, float fX, float fY);
@@ -32,6 +33,7 @@ namespace Item
 		friend class CItem;
 	public:
 		~CLife();
+		void Effect(CPlayer* const) override;
 		void Render(const HDC& hDC) override;
 	private:
 		CLife(CGameWorld& world, float fX, float fY);

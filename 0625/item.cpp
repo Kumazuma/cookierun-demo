@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "item.h"
 #include "CGameWorld.h"
+#include "Player.h"
 constexpr float ItemMaxSize = 40.f;
 
 CItem::CItem(CGameWorld& world, float fX, float fY, CItem::Type type):
@@ -75,6 +76,11 @@ Item::CCoin::~CCoin()
 	Release();
 }
 
+void Item::CCoin::Effect(CPlayer* const pPlayer)
+{
+	pPlayer->AddScore(100);
+}
+
 Item::CLife::CLife(CGameWorld& world, float fX, float fY) :
 	CItem{ world, fX, fY, CItem::Type::LIFE }
 {
@@ -83,6 +89,12 @@ Item::CLife::CLife(CGameWorld& world, float fX, float fY) :
 Item::CLife::~CLife()
 {
 	Release();
+}
+
+void Item::CLife::Effect(CPlayer* const pPlayer)
+{
+	//10초를 지속시켜 준다.
+	pPlayer->AddScore(CPlayer::DECREASE_POINT_PER_SECOND * 10);
 }
 
 void Item::CLife::Render(const HDC& hDC)
