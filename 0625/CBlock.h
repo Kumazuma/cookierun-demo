@@ -21,6 +21,9 @@ public:
 public:
 	bool IsBlockInView(void);
 	RECT GetConvRect(void) const;
+	float GetConvLeft(void) const;
+	float GetConvRight(void) const;
+
 
 private:
 	CMap& m_rMap;

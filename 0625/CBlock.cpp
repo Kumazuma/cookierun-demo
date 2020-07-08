@@ -85,3 +85,13 @@ RECT CBlock::GetConvRect(void) const
 	};
 	return rc;
 }
+
+float CBlock::GetConvLeft(void) const
+{
+	return m_rMap.GetConvLeft(GetX());
+}
+
+float CBlock::GetConvRight(void) const
+{
+	return m_rMap.GetConvRight(GetX());
+}

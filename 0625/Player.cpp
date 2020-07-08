@@ -7,6 +7,8 @@
 #include "Shield.h"
 #include "MainApp.h"
 #include "State.h"
+#include "CMap.h"
+#include "CBlock.h"
 #include <assert.h>
 CPlayer::CPlayer(CGameWorld& _rGameWorld)
 	:
@@ -40,7 +42,6 @@ void CPlayer::Ready(void)
 
 int CPlayer::Update(void)
 {
-	
 	if (m_pPlayerState != nullptr)
 	{
 		
